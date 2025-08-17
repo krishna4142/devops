@@ -13,6 +13,8 @@ const firebaseConfig = {
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+
+
     window.createuseraccount = function(e) {
          // e.preventDefault();
         const usernameRaw = document.getElementById('usernam').value.trim();
@@ -29,6 +31,8 @@ const firebaseConfig = {
       // level.push('sec342')
       
 
+       
+
       if (username === "") {
         alert("Username is required.");
         return;
@@ -39,6 +43,15 @@ const firebaseConfig = {
               alert('user was already exit')
             }
             else{
+                const file = document.getElementById("fileInput").files[0];
+                if (!file) {
+                    alert("Please select an image first!");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                const base64Image = reader.result; // image in Base64 format
                  database.ref('users/' + number).set({
                   username: username,
                   email: email,
@@ -47,15 +60,19 @@ const firebaseConfig = {
                   number:number,
                   level:level,
                   htnum:htnum,
+                  profileImage: base64Image                
                 })
+                
                 .then(() => {
                   alert(`User "${username}" saved successfully.YOUR LEVEL PASSWORD"${level[level.length-1]}"`)
                 })
                 .catch((error) => {
                   alert('Error: ' + error.message)
                 });
+                };
+                reader.readAsDataURL(file); // Convert to Base64
               }
-        })
+         })
         .catch((error) => {
             console.error("Firebase Error:", error);
             alert('Error reading user data.');
