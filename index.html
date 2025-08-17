@@ -246,7 +246,7 @@
       <div>
         <button class="user-btn" onclick="toggleDropdown()">User</button>
         <div class="dropdown" id="userDropdown">
-          <a href="#" onclick="showForm('registerForm')">Create Account</a>
+          <a href="#" onclick="showForm('registerForm')"> Create Account</a>
           <a href="#" onclick="showForm('loginForm')">Login</a>
           <a href="#" onclick="showForm('checkStatusForm')">Check Status</a>
           <a href="#" onclick="showForm('updateProfileForm')">Update Profile</a>
@@ -278,16 +278,17 @@
     <button class="back-btn" onclick="goHome()">Back</button>
   </div>
 
+  <!-- user record -->
   <!-- Example Other Forms (User Register, Login etc. kept as before) -->
   <div class="form-container" id="registerForm">
-    <h2>User Registration</h2>
-    <input type="text" placeholder="Username">
-    <input type="text" placeholder="Father Name">
-    <input type="text" placeholder="Mobile Number">
-    <input type="email" placeholder="Email ID">
-    <input type="password" placeholder="Password">
-    <textarea placeholder="Address"></textarea>
-    <button>Submit</button>
+    <h2>User Registration sai</h2>
+    <input type="text" placeholder="Username" id="usernam">
+    <input type="text" placeholder="Father Name" id="fathername">
+    <input type="text" placeholder="Mobile Number" id="num">
+    <input type="email" placeholder="Email ID" id="email">
+    <input type="password" placeholder="Password" id="password">
+    <textarea placeholder="Address" id="address"></textarea>
+    <button onclick="createuseraccount()">Submit</button>
     <button class="back-btn" onclick="goHome()">Back</button>
   </div>
 
@@ -386,5 +387,9 @@ function updateUserProfile() {
     }
   </style>
 
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script type="module" src="firebase.js"></script>
 </body>
 </html>
