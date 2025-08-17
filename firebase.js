@@ -27,7 +27,7 @@ const firebaseConfig = {
       const father=document.getElementById('fathername').value.trim()
       const address=document.getElementById('address').value.trim()
       const level=['one001']
-      const htnum=`DEVEPS${Math.floor(Math.random()*100)}`
+      const htnum=`DEVEPS${Math.floor(Math.random()*1000)}`
       // level.push('sec342')
       
 
@@ -77,4 +77,52 @@ const firebaseConfig = {
             console.error("Firebase Error:", error);
             alert('Error reading user data.');
         });   
+    }
+
+
+// user login session
+    window.userlogin = function(e) {
+      const usernameRaw = document.getElementById('viewusername').value.trim();
+    const username = usernameRaw.replace(/[.#$\[\]]/g, "_");
+    const number = document.getElementById('viewnum').value.trim();
+    const password = document.getElementById('viewpasswors').value.trim();
+
+    if (!username || !number || !password) {
+        alert("Please enter both username and mobile number.");
+        return;
+    }
+
+    console.log("Checking Firebase for number:", number);
+
+    database.ref('users/' + number).once('value')
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                console.log("Firebase Data Found:", data);
+
+                if (data.username === username && data.number === number && data.password===password) {
+                      
+                    document.querySelectorAll(".form-container").forEach(f => f.style.display = "none");
+                    document.querySelector('.hero').style.display="none"
+                    document.querySelector('.bodyprofile').style.display="block"
+                    let getimg=document.getElementById('getimg');
+
+                    getimg.src=`${data.profileImage}`
+                    document.getElementById('setname').innerText=`${data.username}`
+                    document.getElementById('getnum').innerText=`${data.username}`
+                    document.getElementById('getnumber').innerText=`${data.number}`
+                    document.getElementById('getlevel').innerText=`${data.level.length}`
+                    document.getElementById('account').innerText=`SS${data.htnum}`
+
+                } else {
+                    alert('Username or Mobile Number does not match.');
+                }
+            } else {
+                alert(`User not found for number: ${number}`);
+            }
+        })
+        .catch((error) => {
+            console.error("Firebase Error:", error);
+            alert('Error reading user data.');
+        });
     }

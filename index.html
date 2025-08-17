@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DevOps With AWS</title>
+  <link rel="stylesheet" href="user.css">
   <style>
     body {
       margin: 0;
@@ -293,13 +294,35 @@
     <button class="back-btn" onclick="goHome()">Back</button>
   </div>
 
+
+
   <div class="form-container" id="loginForm">
     <h2>User Login</h2>
-    <input type="text" placeholder="Mobile Number" >
-    <input type="email" placeholder="Email ID">
-    <input type="password" placeholder="Password">
-    <button>Login</button>
+    <input type="text" placeholder="Mobile Number" id="viewnum">
+    <input type="text" placeholder="user name" id="viewusername">
+    <input type="password" placeholder="Password" id="viewpasswors">
+    <button onclick="userlogin()">Login</button>
     <button class="back-btn" onclick="goHome()">Back</button>
+  </div>
+
+  <!-- profilecard  -->
+   <div class="bodyprofile" style="display: none;"> 
+   <div class="profile-card" >
+    <!-- <img src="https://i.pravatar.cc/150?img=32" alt="User Image"> -->
+     <img src="" alt="" id="getimg">
+    <h2 id="setname">SAI KRISHNA</h2>
+    <div class="profile-details">
+      <p><strong>Name:</strong> <span id="getnum"></span></p>
+      <p><strong>Mobile Number:</strong> <span id="getnumber"></span></p>
+      <p><strong>Level Number:</strong> <span id="getlevel"></span></p>
+      <p><strong>A/C Number:</strong> <span id="account"></span></p>
+    </div>
+    <div class="coins">💰 Coins: 4300</div>
+    <div class="btn-container">
+      <button class="btn">Home</button>
+      <button class="btn">Add Coins</button>
+    </div>
+    </div>
   </div>
 
   <!-- Check Status Form -->
@@ -320,8 +343,8 @@
   <button class="back-btn" onclick="goHome()">Back</button>
 </div>
 
-  <script>
-    function toggleDropdown() {
+  <script> 
+     function toggleDropdown() {
       document.getElementById("userDropdown").classList.toggle("show");
     }
 
