@@ -342,50 +342,32 @@ window.copyText = function (text) {
     }
 
 window.nextlevel = function () {
-  alert('hhjjjjjjjjjjjjjjjjjjj')
-   let number=document.getElementById('setusernumber').innerText
-   number=number.trim()
-  let username=document.getElementById("setusername").innerText
-  let code=document.getElementById('setusercode').innerText
-  alert(number)
+  alert('ok')
+  let number = document.getElementById('setusernumber').innerText;
+  let username = document.getElementById("setusername").innerText;
+  let code = document.getElementById('setusercode').innerText;
 
-
-  database.ref('users/' + number).update({
-                          level: level
-                       })
-                      .then(() => {
-                        alert(`🎉 Congratulations! You qualified. New Level Code: ${newLevelCode}`);
-                        document.getElementById('setusercode').innerText = newLevelCode; // update UI
-                      })
-
-                      
   database.ref('users/' + number).once('value')
         .then((snapshot) => {
             if (snapshot.exists()) {
                  const data = snapshot.val();
-                 alert('exit')
                 // console.log("Firebase Data Found:", data);
                 if (data.username === username && data.number === number) {
                   if(code==data.level[data.level.length-1]){
                       let level=data.level
                       level.push(`DEV${Math.floor(Math.random()*1000)}`)
-
                       database.ref('users/' + number).update({
-                          level: level
-                       })
+                        level:level,
+                      })
                       .then(() => {
-                        alert(`🎉 Congratulations! You qualified. New Level Code: ${newLevelCode}`);
-                        document.getElementById('setusercode').innerText = newLevelCode; // update UI
+                        alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
                       })
                       .catch((error) => {
                         alert('Error: ' + error.message)
                       });
-
                   }
                   else{
-                    alert('You Are Already Completed This Level !!!!!!!')
                      
-
                   }
                 }
             
@@ -403,5 +385,5 @@ window.nextlevel = function () {
             alert('Error reading user data.');
         });            
 
-      }
+}
 

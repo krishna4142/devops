@@ -734,5 +734,5 @@ const linuxQuestions = {
     } else {
       alert("❌ Sorry! You did not qualify. Score: " + percentage + "%");
      }
-    location.reload();
+    // location.reload();
   }
