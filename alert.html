@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static Profile Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    /* Circle with image */
+    .circle {
+      width: 250px;
+      height: 250px;
+      border: 5px solid #2c3ee6; /* blue border */
+      border-radius: 50%;
+      margin: auto;
+      overflow: hidden; /* hides extra parts of the image */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* fills circle nicely */
+    }
+
+    /* Name */
+    .name {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #a3081a; /* dark red */
+    }
+
+    /* Codes */
+    .code {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #a3081a;
+      font-weight: bold;
+    }
+
+    button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      background: #444;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+   <!-- Circle with image -->
+  <div class="circle">
+    <img src="" id="statususerimage" alt="">
+  </div>
+
+  <!-- Name -->
+  <div class="name" id="statususername"></div>
+
+  <!-- Codes with copy buttons -->
+  <div class="code" id="statuusercode">
+    </div>
+    <!-- LEVEL CODE1 : <span id="code1">1239400</span>
+    <button onclick="copyCode('code1')">Copy</button>
+  </div>
+
+  <div class="code">
+    LEVEL CODE2 : <span id="code2">1239400</span>
+    <button onclick="copyCode('code2')">Copy</button>
+  </div> -->
+
+  <!-- <script>
+    function copyCode(id) {
+      const codeText = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(codeText).then(() => {
+        alert("Copied: " + codeText);
+      });
+    }
+  </script> -->
+
+ >
+</body>
+</html>

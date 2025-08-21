@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Interview Multi-Level Quiz</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f8ff; padding: 30px; text-align: center; }
+  .quiz-box { max-width: 700px; margin: auto; background: #fff; border-radius: 14px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+  h2 { margin-bottom: 20px; }
+  .options label { display: block; text-align: left; background: #f9f9f9; margin: 8px 0; padding: 10px; border-radius: 8px; cursor: pointer; border: 1px solid #ddd; }
+  .options input { margin-right: 10px; }
+  button { margin: 10px; padding: 12px 20px; background: #007bff; border: none; color: #fff; font-size: 16px; border-radius: 8px; cursor: pointer; }
+  button:hover { background: #0056b3; }
+  #result { margin-top: 20px; font-weight: bold; font-size: 18px; }
+  .level-info { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #333; }
+  #level-selection button { display: inline-block; margin: 5px; background: #28a745; }
+  #level-selection button.locked { background: #ccc; cursor: not-allowed; }
+  #level-selection button:hover:not(.locked) { background: #1e7e34; }
+  #user-form input { display: block; margin: 10px auto; padding: 10px; width: 80%; border-radius: 8px; border: 1px solid #ddd; }
+</style>
+</head>
+<body>
+
+<div class="quiz-box">
+  <h2>HTML Interview Quiz</h2>
+
+  <!-- User confirmation form -->
+  <div id="user-form">
+    <h3>Please enter your details</h3>
+    <input type="text" id="username" placeholder="Enter your name" required>
+    <input type="text" id="mobile" placeholder="Enter mobile number" required>
+    <button onclick="submitUser()">Start Quiz</button>
+  </div>
+
+  <!-- Level selection screen -->
+  <div id="level-selection" style="display:none;">
+    <h3>Select a Level</h3>
+    <div>
+      <button id="level1-btn" onclick="startLevel(1)">Level 1</button>
+      <button id="level2-btn" class="locked" onclick="startLevel(2)">Level 2</button>
+      <button id="level3-btn" class="locked" onclick="startLevel(3)">Level 3</button>
+      <button id="level4-btn" class="locked" onclick="startLevel(4)">Level 4</button>
+      <button id="level5-btn" class="locked" onclick="startLevel(5)">Level 5</button>
+      <button id="level6-btn" class="locked" onclick="startLevel(6)">Level 6</button>
+      <button id="level7-btn" class="locked" onclick="startLevel(7)">Level 7</button>
+      <button id="level8-btn" class="locked" onclick="startLevel(8)">Level 8</button>
+      <button id="level9-btn" class="locked" onclick="startLevel(9)">Level 9</button>
+      <button id="level10-btn" class="locked" onclick="startLevel(10)">Level 10</button>
+    </div>
+  </div>
+
+  <!-- Quiz screen -->
+  <div id="quiz-container" style="display:none;">
+    <div class="level-info" id="level-info"></div>
+    <p id="question"></p>
+    <div class="options" id="options"></div>
+    <button id="nextBtn">Next</button>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+const quizData = {
+  1: [
+    { question: "1. What does HTML stand for?", options: ["Hyper Text Markup Language","High Text Markup Language","Hyperlinks Text Markup","Home Tool Markup Language"], answer: "Hyper Text Markup Language" },
+    { question: "2. Largest heading tag?", options: ["<h6>","<h1>","<heading>","<head>"], answer: "<h1>" },
+    { question: "3. Attribute for images?", options: ["src","href","alt","link"], answer: "src" },
+    { question: "4. Correct element for line break?", options: ["<lb>","<break>","<br>","<newline>"], answer: "<br>" },
+    { question: "5. Tag for hyperlink?", options: ["<a>","<link>","<href>","<hyper>"], answer: "<a>" }
+  ],
+  2: [
+    { question: "6. Element for paragraph?", options: ["<para>","<p>","<paragraph>","<text>"], answer: "<p>" },
+    { question: "7. Tag to insert image?", options: ["<picture>","<image>","<img>","<src>"], answer: "<img>" },
+    { question: "8. Tag for unordered list?", options: ["<ul>","<ol>","<list>","<li>"], answer: "<ul>" },
+    { question: "9. Attribute for alt text?", options: ["alt","title","name","src"], answer: "alt" },
+    { question: "10. Tag to define table?", options: ["<tab>","<tr>","<table>","<td>"], answer: "<table>" }
+  ],
+  3: [
+    { question: "11. Default font size tag?", options: ["<b>","<big>","<p>","<h1>"], answer: "<big>" },
+    { question: "12. Tag for bold text?", options: ["<b>","<strong>","<bold>","Both a & b"], answer: "Both a & b" },
+    { question: "13. Tag for italic?", options: ["<i>","<italic>","<em>","Both a & c"], answer: "Both a & c" },
+    { question: "14. How to comment in HTML?", options: ["//","/* */","<!-- -->","##"], answer: "<!-- -->" },
+    { question: "15. Tag for division?", options: ["<div>","<section>","<span>","<d>"], answer: "<div>" }
+  ],
+  4: [
+    { question: "16. Inline vs block element?", options: ["<span> inline","<div> block","Both a & b","None"], answer: "Both a & b" },
+    { question: "17. Tag for ordered list?", options: ["<ul>","<ol>","<list>","<li>"], answer: "<ol>" },
+    { question: "18. Attribute to open link in new tab?", options: ["target='_blank'","href","src","link"], answer: "target='_blank'" },
+    { question: "19. Tag for table row?", options: ["<tr>","<td>","<table>","<row>"], answer: "<tr>" },
+    { question: "20. Tag for table cell?", options: ["<tr>","<td>","<table>","<cell>"], answer: "<td>" }
+  ],
+  5: [
+    { question: "21. Form tag?", options: ["<form>","<input>","<button>","<fieldset>"], answer: "<form>" },
+    { question: "22. Tag for text input?", options: ["<input>","<textarea>","<select>","<option>"], answer: "<input>" },
+    { question: "23. Dropdown list tag?", options: ["<input>","<textarea>","<select>","<option>"], answer: "<select>" },
+    { question: "24. Tag for button?", options: ["<button>","<input>","<a>","<link>"], answer: "<button>" },
+    { question: "25. Radio button type?", options: ["text","radio","checkbox","button"], answer: "radio" }
+  ],
+  6: [
+    { question: "26. Checkbox type?", options: ["text","radio","checkbox","button"], answer: "checkbox" },
+    { question: "27. Attribute for placeholder?", options: ["name","value","placeholder","title"], answer: "placeholder" },
+    { question: "28. Tag for label?", options: ["<label>","<input>","<form>","<span>"], answer: "<label>" },
+    { question: "29. Attribute for image size?", options: ["width","height","Both a & b","size"], answer: "Both a & b" },
+    { question: "30. Tag for horizontal line?", options: ["<hr>","<line>","<hl>","<hline>"], answer: "<hr>" }
+  ],
+  7: [
+    { question: "31. Attribute for background color?", options: ["bgcolor","color","background","style"], answer: "bgcolor" },
+    { question: "32. Tag for semantic section?", options: ["<div>","<section>","<article>","<span>"], answer: "<section>" },
+    { question: "33. Tag for article?", options: ["<article>","<section>","<div>","<span>"], answer: "<article>" },
+    { question: "34. Tag for footer?", options: ["<footer>","<foot>","<div>","<section>"], answer: "<footer>" },
+    { question: "35. Tag for header?", options: ["<header>","<head>","<h1>","<div>"], answer: "<header>" }
+  ],
+  8: [
+    { question: "36. HTML5 video tag?", options: ["<video>","<movie>","<media>","<vid>"], answer: "<video>" },
+    { question: "37. HTML5 audio tag?", options: ["<audio>","<sound>","<media>","<music>"], answer: "<audio>" },
+    { question: "38. Tag for canvas?", options: ["<canvas>","<paint>","<drawing>","<art>"], answer: "<canvas>" },
+    { question: "39. Attribute for autoplay?", options: ["autoplay","play","start","loop"], answer: "autoplay" },
+    { question: "40. Attribute for loop?", options: ["loop","repeat","autoplay","play"], answer: "loop" }
+  ],
+  9: [
+    { question: "41. HTML5 semantic tag for nav?", options: ["<nav>","<menu>","<ul>","<header>"], answer: "<nav>" },
+    { question: "42. Tag for main content?", options: ["<main>","<body>","<section>","<div>"], answer: "<main>" },
+    { question: "43. Meta tag for charset?", options: ["<meta charset='UTF-8'>","<meta>","<meta charset>","<charset>"], answer: "<meta charset='UTF-8'>" },
+    { question: "44. Attribute for link rel?", options: ["rel","href","src","type"], answer: "rel" },
+    { question: "45. Tag for iframe?", options: ["<iframe>","<frame>","<embed>","<object>"], answer: "<iframe>" }
+  ],
+  10: [
+    { question: "46. HTML global attribute?", options: ["class","id","style","All of above"], answer: "All of above" },
+    { question: "47. Self-closing tag example?", options: ["<br>","<div>","<p>","<span>"], answer: "<br>" },
+    { question: "48. Tag for script?", options: ["<script>","<js>","<javascript>","<code>"], answer: "<script>" },
+    { question: "49. Tag for link CSS?", options: ["<link>","<style>","<css>","<stylesheet>"], answer: "<link>" },
+    { question: "50. Tag for comment?", options: ["//","/* */","<!-- -->","##"], answer: "<!-- -->" }
+  ]
+};
+
+let currentLevel = 1;
+let currentQ = 0;
+let score = 0;
+let username = "";
+let mobile = "";
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+const resultEl = document.getElementById("result");
+const levelInfo = document.getElementById("level-info");
+
+function submitUser() {
+  username = document.getElementById("username").value.trim();
+  mobile = document.getElementById("mobile").value.trim();
+  if (!username || !mobile) { alert("Please enter both name and mobile number"); return; }
+  document.getElementById("user-form").style.display = "none";
+  document.getElementById("level-selection").style.display = "block";
+}
+
+function startLevel(level) {
+  const btn = document.getElementById(`level${level}-btn`);
+  if (btn.classList.contains("locked")) { alert("This level is locked. Complete previous level to unlock."); return; }
+  currentLevel = level;
+  currentQ = 0;
+  score = 0;
+  document.getElementById("level-selection").style.display = "none";
+  document.getElementById("quiz-container").style.display = "block";
+  resultEl.innerHTML = "";
+  levelInfo.innerText = `Level ${level} - ${username}`;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  let q = quizData[currentLevel][currentQ];
+  questionEl.innerText = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(opt => {
+    let label = document.createElement("label");
+    label.innerHTML = `<input type="radio" name="option" value="${opt}"> ${opt}`;
+    optionsEl.appendChild(label);
+  });
+}
+
+function getSelected() {
+  let radios = document.getElementsByName("option");
+  for (let r of radios) { if (r.checked) return r.value; }
+  return null;
+}
+
+nextBtn.addEventListener("click", () => {
+  let selected = getSelected();
+  if (!selected) { alert("Please select an answer!"); return; }
+  if (selected === quizData[currentLevel][currentQ].answer) { score++; }
+  currentQ++;
+  if (currentQ < quizData[currentLevel].length) { loadQuestion(); }
+  else {
+    resultEl.innerHTML = `🎯 Level ${currentLevel} Completed! Score: ${score} / ${quizData[currentLevel].length}`;
+    document.getElementById("quiz-container").style.display = "none";
+    document.getElementById("level-selection").style.display = "block";
+    unlockNextLevel(currentLevel + 1);
+  }
+});
+
+function unlockNextLevel(level) {
+  const btn = document.getElementById(`level${level}-btn`);
+  if (btn) btn.classList.remove("locked");
+}
+</script>
+
+</body>
+</html>

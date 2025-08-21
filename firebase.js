@@ -94,6 +94,7 @@ const firebaseConfig = {
 
     console.log("Checking Firebase for number:", number);
 
+     
     database.ref('users/' + number).once('value')
         .then((snapshot) => {
             if (snapshot.exists()) {
@@ -126,3 +127,281 @@ const firebaseConfig = {
             alert('Error reading user data.');
         });
     }
+
+
+
+
+//create bank account
+window.createbankaccount = function(e) {
+    e.preventDefault(); // ✅ prevents reload
+
+    let fullname = document.getElementById('fullname').value.trim();
+    let dob = document.getElementById('dob').value.trim();
+    let email = document.getElementById('bankemail').value.trim();
+    let phone = document.getElementById('bankphone').value.trim();
+    let address = document.getElementById('bankaddress').value.trim();
+
+    console.log("Collected values:", { fullname, dob, email, phone, address });
+
+    if (!fullname || !dob || !email || !phone || !address) {
+        alert("All fields are required!");
+        return;
+    }
+
+    let account = `AC${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+    database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                    database.ref('bankuser/' + phone).set({
+                        Fullname:fullname,
+                        Email:email,
+                        dateofbirth: dob,
+                        number: phone,
+                        Address:address,
+                        Account:account,
+                    })
+                    .then(() => {
+                        console.log("✅ Data successfully written to Firebase!");
+                        alert(`Bank account created successfully for "${fullname}" with A/C: ${account}`);
+                    })
+                    .catch((error) => {
+                        console.error("Firebase Error:", error);
+                        alert('Error: ' + error.message);
+                    });}
+
+            else{
+                alert("YOU DON'N HAVE MEMBERSHIP ACCOUNT PLESE SIGIN FIRST MEMBERSHIP")
+            }
+    })
+        .catch((error) => {
+            console.error("Firebase Error:", error);
+            alert('Error reading user data.');
+        });
+}
+
+
+window.registerMembershipForm = function(e) {
+    e.preventDefault();
+
+    const memberusername = document.getElementById('memberusername').value.trim();
+    const phone = document.getElementById('membermobile').value.trim();
+
+    // basic validation
+    if (!memberusername) {
+      alert("Username is required!");
+      return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      alert("Mobile number must be exactly 10 digits.");
+      return;
+    }
+
+    // check if user exists
+    database.ref('bankuser/' + phone).get()
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          alert("User already exists with this phone number.");
+          return;
+        }
+
+        // save new membership
+        return database.ref('bankuser/' + phone).set({
+          Fullname: memberusername,
+          Email: "",
+          dateofbirth: "",
+          number: phone,
+          Address: "",
+          Account: "",
+        });
+      })
+      .then((result) => {
+        alert('successed')
+        if (result !== undefined) { // only if set() ran
+          alert(`Membership registered successfully for "${memberusername}".`);
+          document.getElementById("membershipForm").reset();
+        }
+      })
+      .catch((error) => {
+        console.error("Firebase Error:", error);
+        alert("Error: " + error.message);
+      });
+  };
+
+  // ✅ attach form handler properly
+ 
+
+
+
+  //************************* SHOW QUESTION ******************************/
+   window.startQuiz = function(e) {
+
+      let username = document.getElementById("username").value;
+      let number = document.getElementById("mobile").value;
+      let level = document.getElementById("level").value;
+      let code = document.getElementById("levelCode").value;
+
+
+      database.ref('users/' + number).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              if(username==data.username){
+                if(level<=data.level.length){
+                  if(code==data.level[level-1]){
+                    alert('ok')
+                    document.getElementById('setusername').innerText=`${data.username}`
+                    document.getElementById('setusernumber').innerText=`${data.number}`
+                    document.getElementById('setusercode').innerText=`${data.level[(data.level.length)-1]}`
+
+                    // document.querySelectorAll(".form-container").forEach(f => f.style.display = "none");
+                    // document.querySelector('.hero').style.display="none"
+                    // document.querySelector('.bodyprofile').style.display="none"
+                    // document.querySelector('.bodystatus').style.display="none"
+                    window.startQuizunic();
+                  }
+                  else{
+                    alert('enter currect level code')
+                  }
+                }
+                 
+                 
+                else{
+                  alert('you are not elegebe for this level')
+                }
+              }
+              else{
+                alert('enter currect user name')
+              }
+            }
+            else{
+              alert('user not exist ')
+            }
+
+          })
+        .catch((error) => {
+            console.error("Firebase Error:", error);
+            alert('Error reading user data.');
+        }); 
+        
+        
+      if(username && mobile && level && code) {
+        alert("✅ Login successful for " + username + " (Level " + level + ")");
+        // Redirect to quiz page here
+      } else {
+        alert("⚠️ Please fill all fields correctly!");
+      }
+    }
+
+
+
+
+
+  // Example functions
+ window.checkUserStatus = function(e) {
+  let number = document.getElementById("statusMobile").value.trim();
+  alert("Checking status for Mobile: " + number);
+   database.ref('users/' + number).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              alert('ok')
+
+              document.querySelectorAll(".form-container").forEach(f => f.style.display = "none");
+              document.querySelector('.hero').style.display="none"
+              document.querySelector('.bodyprofile').style.display="none"
+              document.querySelector('.bodystatus').style.display="block"
+
+              let statususerimage=document.getElementById('statususerimage');
+              statususerimage.src=`${data.profileImage}`;
+              document.getElementById('statususername').innerText=`${data.username}`
+              for(let i=0;i<data.level.length;i++){
+                let certificateDiv=document.getElementById('statuusercode')
+         
+                  certificateDiv.innerHTML+=`
+                  <span> Level${i+1}_ → ${data.level[i]}</span>
+                  <button class="copy-btn" onclick="copyText('${data.level[i]}')">Copy</button><br>`
+              }
+             }
+            else{
+              alert('enter currect number')
+            }
+            })
+        .catch((error) => {
+            console.error("Firebase Error:", error);
+            alert('Error reading user data.');
+        }); 
+}
+window.copyText = function (text) {
+      const tempInput = document.createElement("input");
+      document.body.appendChild(tempInput);
+      tempInput.value = text;
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      alert(`Copied: ${text}`);
+    }
+
+window.nextlevel = function () {
+  alert('hhjjjjjjjjjjjjjjjjjjj')
+   let number=document.getElementById('setusernumber').innerText
+   number=number.trim()
+  let username=document.getElementById("setusername").innerText
+  let code=document.getElementById('setusercode').innerText
+  alert(number)
+
+
+  database.ref('users/' + number).update({
+                          level: level
+                       })
+                      .then(() => {
+                        alert(`🎉 Congratulations! You qualified. New Level Code: ${newLevelCode}`);
+                        document.getElementById('setusercode').innerText = newLevelCode; // update UI
+                      })
+
+                      
+  database.ref('users/' + number).once('value')
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                 const data = snapshot.val();
+                 alert('exit')
+                // console.log("Firebase Data Found:", data);
+                if (data.username === username && data.number === number) {
+                  if(code==data.level[data.level.length-1]){
+                      let level=data.level
+                      level.push(`DEV${Math.floor(Math.random()*1000)}`)
+
+                      database.ref('users/' + number).update({
+                          level: level
+                       })
+                      .then(() => {
+                        alert(`🎉 Congratulations! You qualified. New Level Code: ${newLevelCode}`);
+                        document.getElementById('setusercode').innerText = newLevelCode; // update UI
+                      })
+                      .catch((error) => {
+                        alert('Error: ' + error.message)
+                      });
+
+                  }
+                  else{
+                    alert('You Are Already Completed This Level !!!!!!!')
+                     
+
+                  }
+                }
+            
+                else{
+                  alert('enter currect details')
+                }
+            }
+              else{
+                alert('user can not be exit ')
+              }
+
+         })
+        .catch((error) => {
+            console.error("Firebase Error:", error);
+            alert('Error reading user data.');
+        });            
+
+      }
+

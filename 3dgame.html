@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>2D Map Game</title>
+<style>
+  :root{
+    --w: 1000px;
+    --h: 680px;
+    --road: #3c3c3c;
+  }
+  body{
+    margin:0;
+    font-family: system-ui, Arial, sans-serif;
+    background:#f6f7fb;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    padding:18px;
+  }
+  h2{margin:0 0 6px 0}
+
+  .game {
+    position:relative;
+    width:var(--w);
+    height:var(--h);
+    background:#fff;
+    border:2px solid #000;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+  }
+
+  .road {position:absolute;background:var(--road);}
+  .road.h {
+    top:42%;
+    left:0;
+    width:100%;
+    height:110px;
+    box-shadow: inset 0 5px 0 #2e2e2e, inset 0 -5px 0 #2e2e2e;
+  }
+  .road.v {
+    left:48%;
+    top:0;
+    width:110px;
+    height:100%;
+    box-shadow: inset 5px 0 0 #2e2e2e, inset -5px 0 0 #2e2e2e;
+  }
+
+  .dash-h, .dash-v {position:absolute; background:repeating-linear-gradient(
+    90deg, #ffd43b 0 40px, rgba(0,0,0,0) 40px 80px);}
+  .dash-h {top:calc(42% + 55px - 3px); left:0; width:100%; height:6px;}
+  .dash-v {left:calc(48% + 55px - 3px); top:0; width:6px; height:100%;
+           background:repeating-linear-gradient(
+             180deg, #ffd43b 0 40px, rgba(0,0,0,0) 40px 80px);}
+
+  .spot {position:absolute; text-align:center;}
+  .spot img{display:block; width:220px; height:auto; user-select:none;}
+
+  #spot-html {top:18px; left:22px;}
+  #spot-java {top:18px; right:22px;}
+  #spot-bank {bottom:128px; left:22px;}
+  #spot-home {bottom:128px; right:22px;}
+
+  .stack {display:flex; gap:12px; align-items:flex-end}
+  .stack img{width:110px}
+
+  #player {
+    position:absolute;
+    width:64px;
+    height:100px;
+    top:65%;
+    left:48.5%;
+    transform-origin:center center;
+  }
+  #playerImg{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    user-select:none;
+    pointer-events:none;
+  }
+  .walking #playerImg { animation: step 0.32s infinite alternate; }
+  @keyframes step {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-6px); }
+  }
+
+  .controls{
+    position:absolute;
+    bottom:14px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    z-index:5;
+  }
+  .row{display:flex; gap:10px;}
+  .ctrl{
+    width:52px; height:52px;
+    border-radius:50%;
+    border:0;
+    background:#e11d48; color:#fff;
+    font-size:22px; cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,.18);
+  }
+  .ctrl:active{transform:translateY(1px)}
+
+  /* Overlay for modal effect */
+  .overlay {
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    z-index:90;
+  }
+
+  .popup{
+    position: fixed;  
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    background:#ffffff;
+    border:2px solid #111;
+    border-radius:12px;
+    padding:14px;
+    display:none;
+    z-index:100;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .popup h3{margin:0 0 10px 0; font-size:18px; text-align:center}
+  .popup button{
+    width:100%; padding:10px; margin:6px 0;
+    background:#2563eb; color:#fff; border:0; border-radius:8px; cursor:pointer;
+  }
+  .popup button:hover{background:#1d4ed8}
+  .badge{font-size:12px; color:#555}
+</style>
+</head>
+<body>
+  <h2>2D Map Game</h2>
+
+  <div class="game" id="stage">
+    <div class="road h"></div>
+    <div class="road v"></div>
+    <div class="dash-h"></div>
+    <div class="dash-v"></div>
+
+    <!-- HTML/CSS/JS Spot -->
+    <div class="spot" id="spot-html">
+      <div class="stack">
+        <img id="html" alt="HTML5" src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg">
+        <img id="js" alt="JS" src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png">
+        <img id="css" alt="CSS3" src="https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg">
+      </div>
+      <div class="badge">HTML • JS • CSS</div>
+    </div>
+
+    <div class="spot" id="spot-java">
+      <img id="java" alt="Java" src="https://img.icons8.com/color/344/java-coffee-cup-logo.png">
+      <div class="badge">Java</div>
+    </div>
+
+    <div class="spot" id="spot-bank">
+      <img id="bank" alt="Bank" src="https://img.icons8.com/color/344/bank.png">
+      <div class="badge">Bank</div>
+    </div>
+
+    <div class="spot" id="spot-home">
+      <img id="home" alt="Home" src="https://img.icons8.com/color/344/home.png">
+      <div class="badge">Membership</div>
+    </div>
+
+    <div id="player">
+      <img id="playerImg" alt="person"
+           src="https://img.icons8.com/fluency/256/walking.png">
+    </div>
+
+    <div class="controls">
+      <div class="row">
+        <button class="ctrl" onclick="move('up')">↑</button>
+      </div>
+      <div class="row">
+        <button class="ctrl" onclick="move('left')">←</button>
+        <button class="ctrl" onclick="move('down')">↓</button>
+        <button class="ctrl" onclick="move('right')">→</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Bank Popup -->
+  <div class="popup" id="bankPopup">
+    <h3>🏦 Bank Options</h3>
+    <button onclick="alert('Create Account…')"> <a href="userbankrigister.html">Create Account</a></button>
+    <button onclick="alert('Deposit…')">Deposit Money</button>
+    <button onclick="alert('Withdraw…')">Withdraw Money</button>
+    <button onclick="alert('Transfer…')">Transfer Money</button>
+    <button onclick="closePopup('bankPopup')">Close</button>
+  </div>
+
+  <!-- Membership Popup -->
+  <div class="popup" id="homePopup">
+    <h3>👥 Membership Options</h3>
+    <button onclick="alert('Create Membership Account…')"> <a href="memberrigister.html">Create Account</a></button>
+    <button onclick="alert('View Membership Account…')">View Account</button>
+    <button onclick="closePopup('homePopup')">Close</button>
+  </div>
+
+  <!-- Java Popup -->
+  <div class="popup" id="javaPopup">
+    <h3>☕ Java Options</h3>
+    <button onclick="alert('Starting Quiz on Java…')">Start Quiz on Java</button>
+    <button onclick="alert('Learn Java Basics…')">Learn Basics</button>
+    <button onclick="alert('Practice Java Programs…')">Practice Programs</button>
+    <button onclick="closePopup('javaPopup')">Close</button>
+  </div>
+
+  <!-- HTML/CSS/JS Popup -->
+  <div class="popup" id="htmlPopup">
+    <h3>🌐 Web Dev Options</h3>
+    <button onclick="alert('Starting Quiz on HTML…')">Start Quiz on HTML</button>
+    <button onclick="alert('Starting Quiz on CSS…')">Start Quiz on CSS</button>
+    <button onclick="alert('Starting Quiz on JavaScript…')">Start Quiz on JavaScript</button>
+    <button onclick="closePopup('htmlPopup')">Close</button>
+  </div>
+
+<script>
+  const stage      = document.getElementById('stage');
+  const player     = document.getElementById('player');
+  const playerImg  = document.getElementById('playerImg');
+  const bankImage  = document.getElementById('bank');
+  const homeImage  = document.getElementById('home');
+  const javaImage  = document.getElementById('java');
+  const htmlImage  = document.getElementById('html');
+  const cssImage   = document.getElementById('css');
+  const jsImage    = document.getElementById('js');
+
+  const bankPopup  = document.getElementById('bankPopup');
+  const homePopup  = document.getElementById('homePopup');
+  const javaPopup  = document.getElementById('javaPopup');
+  const htmlPopup  = document.getElementById('htmlPopup');
+  const overlay    = document.getElementById('overlay');
+
+  let x = player.offsetLeft;
+  let y = player.offsetTop;
+  const STEP = 34;
+
+  let bankAudioPlayed = false;
+  let homeAudioPlayed = false;
+  let javaAudioPlayed = false;
+  let htmlAudioPlayed = false;
+
+  function speak(text){
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "en-US";
+    window.speechSynthesis.speak(msg);
+  }
+
+  function clamp(val, min, max){ return Math.min(max, Math.max(min, val)); }
+
+  function move(dir){
+    player.classList.add('walking');
+    if(dir==='up')    { y -= STEP; player.style.transform = 'rotate(-90deg)'; }
+    if(dir==='down')  { y += STEP; player.style.transform = 'rotate(90deg)';  }
+    if(dir==='left')  { x -= STEP; player.style.transform = 'scaleX(-1)';     }
+    if(dir==='right') { x += STEP; player.style.transform = 'scaleX(1)';      }
+
+    const maxX = stage.clientWidth  - player.clientWidth;
+    const maxY = stage.clientHeight - player.clientHeight;
+    x = clamp(x, 0, maxX);
+    y = clamp(y, 0, maxY);
+
+    player.style.left = x + 'px';
+    player.style.top  = y + 'px';
+
+    setTimeout(()=> player.classList.remove('walking'), 320);
+
+    checkCollisions();
+  }
+
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowUp')    move('up');
+    if (e.key === 'ArrowDown')  move('down');
+    if (e.key === 'ArrowLeft')  move('left');
+    if (e.key === 'ArrowRight') move('right');
+  });
+
+  function rectOverlap(a,b){
+    return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+  }
+
+  function showPopup(popupId){
+    document.getElementById(popupId).style.display = 'block';
+    overlay.style.display = 'block';
+  }
+  function closePopup(popupId){
+    document.getElementById(popupId).style.display = 'none';
+    overlay.style.display = 'none';
+  }
+
+  function checkCollisions(){
+    const p = player.getBoundingClientRect();
+    const b = bankImage.getBoundingClientRect();
+    const h = homeImage.getBoundingClientRect();
+    const j = javaImage.getBoundingClientRect();
+    const webArea = document.getElementById('spot-html').getBoundingClientRect();
+
+    // Bank check
+    if (rectOverlap(p, {left:b.left-10, right:b.right+10, top:b.top-10, bottom:b.bottom+10})) {
+      showPopup('bankPopup');
+      if (!bankAudioPlayed) {
+        speak("Welcome to bank sector");
+        bankAudioPlayed = true;
+      }
+    } else {
+      if(bankPopup.style.display==='block') closePopup('bankPopup');
+      bankAudioPlayed = false;
+    }
+
+    // Membership check
+    if (rectOverlap(p, {left:h.left-10, right:h.right+10, top:h.top-10, bottom:h.bottom+10})) {
+      showPopup('homePopup');
+      if (!homeAudioPlayed) {
+        speak("Welcome to membership sector");
+        homeAudioPlayed = true;
+      }
+    } else {
+      if(homePopup.style.display==='block') closePopup('homePopup');
+      homeAudioPlayed = false;
+    }
+
+    // Java check
+    if (rectOverlap(p, {left:j.left-10, right:j.right+10, top:j.top-10, bottom:j.bottom+10})) {
+      showPopup('javaPopup');
+      if (!javaAudioPlayed) {
+        speak("Welcome to Java sector");
+        javaAudioPlayed = true;
+      }
+    } else {
+      if(javaPopup.style.display==='block') closePopup('javaPopup');
+      javaAudioPlayed = false;
+    }
+
+    // HTML/CSS/JS check
+    if (rectOverlap(p, {left:webArea.left-10, right:webArea.right+10, top:webArea.top-10, bottom:webArea.bottom+10})) {
+      showPopup('htmlPopup');
+      if (!htmlAudioPlayed) {
+        speak("Welcome to web development sector");
+        htmlAudioPlayed = true;
+      }
+    } else {
+      if(htmlPopup.style.display==='block') closePopup('htmlPopup');
+      htmlAudioPlayed = false;
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Multi-Level Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eef6ff;
+    padding: 30px;
+    text-align: center;
+  }
+  .quiz-box {
+    max-width: 750px;
+    margin: auto;
+    background: #fff;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  h2 { margin-bottom: 20px; }
+  .options label {
+    display: block;
+    text-align: left;
+    background: #f9f9f9;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+  }
+  .options input { margin-right: 10px; }
+  button {
+    margin: 10px;
+    padding: 12px 20px;
+    background: #007bff;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:hover { background: #0056b3; }
+  #feedback {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  #result {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .level-info {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  #level-selection button {
+    display: inline-block;
+    margin: 5px;
+    background: #28a745;
+  }
+  #level-selection button:hover {
+    background: #1e7e34;
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-box">
+  <h2>CSS Interview Quiz</h2>
+  
+  <!-- Level selection -->
+  <div id="level-selection">
+    <h3>Select a Level</h3>
+    <div>
+      <button onclick="startLevel(1)">Level 1</button>
+      <button onclick="startLevel(2)">Level 2</button>
+      <button onclick="startLevel(3)">Level 3</button>
+      <button onclick="startLevel(4)">Level 4</button>
+      <button onclick="startLevel(5)">Level 5</button>
+      <button onclick="startLevel(6)">Level 6</button>
+      <button onclick="startLevel(7)">Level 7</button>
+      <button onclick="startLevel(8)">Level 8</button>
+      <button onclick="startLevel(9)">Level 9</button>
+      <button onclick="startLevel(10)">Level 10</button>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz-container" style="display:none;">
+    <div class="level-info" id="level-info"></div>
+    <p id="question"></p>
+    <div class="options" id="options"></div>
+    <button id="nextBtn">Next</button>
+    <div id="feedback"></div>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+const quizData = {
+  1: [
+    { question: "1. What does CSS stand for?", options: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"], answer: "Cascading Style Sheets" },
+    { question: "2. Which HTML attribute is used to define inline CSS?", options: ["class", "style", "css", "id"], answer: "style" },
+    { question: "3. Which property is used to change text color in CSS?", options: ["fgcolor", "text-color", "color", "font-color"], answer: "color" },
+    { question: "4. Which CSS property controls text size?", options: ["text-size", "font-style", "font-size", "size"], answer: "font-size" },
+    { question: "5. How do you make text bold in CSS?", options: ["font:bold", "font-weight:bold", "text:bold", "style:bold"], answer: "font-weight:bold" }
+  ],
+  2: [
+    { question: "6. Which property is used to change background color?", options: ["bgcolor", "background-color", "color-background", "background"], answer: "background-color" },
+    { question: "7. Which property is used to center text?", options: ["align", "text-align", "center-text", "font-align"], answer: "text-align" },
+    { question: "8. Which property controls the space between lines of text?", options: ["line-height", "spacing", "text-spacing", "font-spacing"], answer: "line-height" },
+    { question: "9. Which property is used to change the font of text?", options: ["text-font", "font-family", "font-style", "typeface"], answer: "font-family" },
+    { question: "10. Which CSS property is used to add shadows to text?", options: ["font-shadow", "text-decoration", "text-shadow", "shadow"], answer: "text-shadow" }
+  ]
+  // Levels 3–10 to be added here
+};
+
+let currentLevel = 1;
+let currentQ = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+const resultEl = document.getElementById("result");
+const levelInfo = document.getElementById("level-info");
+const feedbackEl = document.getElementById("feedback");
+
+function startLevel(level) {
+  currentLevel = level;
+  currentQ = 0;
+  score = 0;
+  document.getElementById("level-selection").style.display = "none";
+  document.getElementById("quiz-container").style.display = "block";
+  resultEl.innerHTML = "";
+  feedbackEl.innerHTML = "";
+  levelInfo.innerText = "Level " + level;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  let q = quizData[currentLevel][currentQ];
+  questionEl.innerText = q.question;
+  optionsEl.innerHTML = "";
+  feedbackEl.innerHTML = "";
+  q.options.forEach(opt => {
+    let label = document.createElement("label");
+    label.innerHTML = `<input type="radio" name="option" value="${opt}"> ${opt}`;
+    optionsEl.appendChild(label);
+  });
+}
+
+function getSelected() {
+  let radios = document.getElementsByName("option");
+  for (let r of radios) {
+    if (r.checked) return r.value;
+  }
+  return null;
+}
+
+nextBtn.addEventListener("click", () => {
+  let selected = getSelected();
+  if (!selected) {
+    feedbackEl.innerHTML = "⚠️ Please select an answer!";
+    feedbackEl.style.color = "orange";
+    return;
+  }
+
+  let correctAnswer = quizData[currentLevel][currentQ].answer;
+
+  if (selected === correctAnswer) {
+    score++;
+    feedbackEl.innerHTML = "✅ Correct! The answer is: " + correctAnswer;
+    feedbackEl.style.color = "green";
+  } else {
+    feedbackEl.innerHTML = "❌ Wrong! The correct answer is: " + correctAnswer;
+    feedbackEl.style.color = "red";
+  }
+
+  currentQ++;
+
+  setTimeout(() => {
+    if (currentQ < quizData[currentLevel].length) {
+      loadQuestion();
+    } else {
+      // After finishing 5 questions
+      alert(`🎯 Level ${currentLevel} Completed!\nScore: ${score} / ${quizData[currentLevel].length}`);
+      document.getElementById("quiz-container").style.display = "none";
+      document.getElementById("level-selection").style.display = "block";
+
+      if (currentLevel === 10) {
+        resultEl.innerHTML = "🏆 You completed all 10 levels! Final Score: " + score;
+      } else {
+        resultEl.innerHTML = `✅ Level ${currentLevel} finished. You can now select another level.`;
+      }
+    }
+  }, 1000); // wait 1s before moving to next
+});
+</script>
+
+</body>
+</html>
