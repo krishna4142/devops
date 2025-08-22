@@ -114,6 +114,7 @@ const firebaseConfig = {
                     document.getElementById('getnumber').innerText=`${data.number}`
                     document.getElementById('getlevel').innerText=`${data.level.length}`
                     document.getElementById('account').innerText=`SS${data.htnum}`
+                    document.getElementById('usercoins').innerText=`${500}`
 
                 } else {
                     alert('Username or Mobile Number does not match.');
@@ -159,6 +160,7 @@ window.createbankaccount = function(e) {
                         number: phone,
                         Address:address,
                         Account:account,
+                        IFSC:"SS038BANK"
                     })
                     .then(() => {
                         console.log("✅ Data successfully written to Firebase!");
@@ -195,7 +197,8 @@ window.registerMembershipForm = function(e) {
       alert("Mobile number must be exactly 10 digits.");
       return;
     }
-
+    let ht=["0"]
+    let cs=["0"]
     // check if user exists
     database.ref('bankuser/' + phone).get()
       .then((snapshot) => {
@@ -212,6 +215,9 @@ window.registerMembershipForm = function(e) {
           number: phone,
           Address: "",
           Account: "",
+          IFSC:"",
+          html:ht,
+          css:cs,
         });
       })
       .then((result) => {
@@ -314,7 +320,7 @@ window.registerMembershipForm = function(e) {
               let statususerimage=document.getElementById('statususerimage');
               statususerimage.src=`${data.profileImage}`;
               document.getElementById('statususername').innerText=`${data.username}`
-              for(let i=0;i<data.level.length;i++){
+               for(let i=0;i<data.level.length;i++){
                 let certificateDiv=document.getElementById('statuusercode')
          
                   certificateDiv.innerHTML+=`
@@ -385,5 +391,178 @@ window.nextlevel = function () {
             alert('Error reading user data.');
         });            
 
+}
+
+
+//**********************************CHECK BANK STATUS**************************** */
+
+window.bankcheckLogin = function () {
+  const phone = document.getElementById('bankcheckuserNumber').value.trim();
+  const userName = document.getElementById('bankcheckuserName').value.trim();
+  database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              if(userName==data.Fullname){
+
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('account-section').style.display = 'block';
+
+
+                document.getElementById('checkusernam').innerText=`${data.Fullname}`
+                document.getElementById('checkusernumber').innerText=`${data.number}`
+                document.getElementById('checkuseraccount').innerText=`${data.Account}`
+                document.getElementById('checkuserIFSC').innerText=`${data.IFSC}`
+              }
+              else{
+                alert('ENTER CURRECT USER NAME')
+              }
+            }
+            else{
+              alert('ENTER CURRECT DETAILS')
+            }
+          })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+}
+
+
+window.htmlsubmitUser = function () {
+  const phone = document.getElementById('htmlmobile').value.trim();
+  const userName = document.getElementById('htmlusername').value.trim();
+  const levelselectionhtml=document.getElementById('levelselectionhtml').value.trim()
+  database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              if(userName==data.Fullname){
+                if(levelselectionhtml==data.html.length){
+                  document.getElementById('printusernum').innerText=`${data.number}`
+                  document.getElementById('printac').innerText=`${data.Account}`
+
+                  window.bankhtmlsubmitUser()
+                  // let html=data.html
+                  //     html.push(`${(data.html.length)+1}`)
+                  //     database.ref('bankuser/' + phone).update({
+                  //       html:html,
+                  //     })
+                  //     .then(() => {
+                  //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
+                  //     })
+                  //     .catch((error) => {
+                  //       alert('Error: ' + error.message)
+                  //     });
+                }
+                else if(levelselectionhtml<=data.html.length){
+                  alert('YOU ARE COMPLETED THIS LEVEL')
+                }
+                else{
+                  alert('YOU ARE NOT ELEGIBLE THIS LEVEL , CHOUSE CURRRECT LEVEL')
+                }
+
+              }}
+
+          })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+
+}
+window.updatelevelhtml = function () {
+    const phone = document.getElementById('printusernum').innerText
+   database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+               let html=data.html
+                      html.push(`${(data.html.length)+1}`)
+                      database.ref('bankuser/' + phone).update({
+                        html:html,
+                      })
+                      .then(() => {
+                        alert(`User "${data.Fullname}" successfully completed .YOUR ELRGIBLE FORNEXT LEVEL "`)
+                      })
+                      .catch((error) => {
+                        alert('Error: ' + error.message)
+                      });
+            }
+        })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+}
+
+
+//*********************************CSS LEVEL ****************************** */
+
+window.csssubmitUser = function () {
+  const phone = document.getElementById('cssmobile').value.trim();
+  const userName = document.getElementById('cssusername').value.trim();
+  const levelselectionhtml=document.getElementById('levelselectioncss').value.trim()
+  database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              if(userName==data.Fullname){
+                if(levelselectionhtml==data.css.length){
+                  document.getElementById('cssprintusernum').innerText=`${data.number}`
+                  document.getElementById('cssprintac').innerText=`${data.Account}`
+
+                  window.bankcsssubmitUser()
+                  // let html=data.html
+                  //     html.push(`${(data.html.length)+1}`)
+                  //     database.ref('bankuser/' + phone).update({
+                  //       html:html,
+                  //     })
+                  //     .then(() => {
+                  //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
+                  //     })
+                  //     .catch((error) => {
+                  //       alert('Error: ' + error.message)
+                  //     });
+                }
+                else if(levelselectioncss<=data.css.length){
+                  alert('YOU ARE COMPLETED THIS LEVEL')
+                }
+                else{
+                  alert('YOU ARE NOT ELEGIBLE THIS LEVEL , CHOUSE CURRRECT LEVEL')
+                }
+
+              }}
+
+          })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+
+}
+window.updatelevelcss = function () {
+    const phone = document.getElementById('cssprintusernum').innerText
+   database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+               let css=data.css
+                      css.push(`${(data.css.length)+1}`)
+                      database.ref('bankuser/' + phone).update({
+                        css:css,
+                      })
+                      .then(() => {
+                        alert(`User "${data.Fullname}" successfully completed .YOUR ELRGIBLE FORNEXT LEVEL "`)
+                      })
+                      .catch((error) => {
+                        alert('Error: ' + error.message)
+                      });
+            }
+        })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
 }
 

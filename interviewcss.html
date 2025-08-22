@@ -5,103 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CSS Multi-Level Quiz</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #eef6ff;
-    padding: 30px;
-    text-align: center;
-  }
-  .quiz-box {
-    max-width: 750px;
-    margin: auto;
-    background: #fff;
-    border-radius: 14px;
-    padding: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  }
+  body { font-family: Arial, sans-serif; background: #f4f8ff; padding: 30px; text-align: center; }
+  .quiz-box { max-width: 700px; margin: auto; background: #fff; border-radius: 14px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
   h2 { margin-bottom: 20px; }
-  .options label {
-    display: block;
-    text-align: left;
-    background: #f9f9f9;
-    margin: 8px 0;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 1px solid #ddd;
-  }
+  .options label { display: block; text-align: left; background: #f9f9f9; margin: 8px 0; padding: 10px; border-radius: 8px; cursor: pointer; border: 1px solid #ddd; }
   .options input { margin-right: 10px; }
-  button {
-    margin: 10px;
-    padding: 12px 20px;
-    background: #007bff;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+  button { margin: 10px; padding: 12px 20px; background: #007bff; border: none; color: #fff; font-size: 16px; border-radius: 8px; cursor: pointer; }
   button:hover { background: #0056b3; }
-  #feedback {
-    margin-top: 15px;
-    font-weight: bold;
-    font-size: 16px;
-  }
-  #result {
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 18px;
-  }
-  .level-info {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #333;
-  }
-  #level-selection button {
-    display: inline-block;
-    margin: 5px;
-    background: #28a745;
-  }
-  #level-selection button:hover {
-    background: #1e7e34;
-  }
+  #result { margin-top: 20px; font-weight: bold; font-size: 18px; }
+  .level-info { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #333; }
+  #level-selection button { display: inline-block; margin: 5px; background: #28a745; }
+  #level-selection button.locked { background: #ccc; cursor: not-allowed; }
+  #level-selection button:hover:not(.locked) { background: #1e7e34; }
+  #levelselectioncss{width: 85%;}
+  #user-form input { display: block; margin: 10px auto; padding: 10px; width: 80%; border-radius: 8px; border: 1px solid #ddd; }
 </style>
 </head>
 <body>
 
 <div class="quiz-box">
   <h2>CSS Interview Quiz</h2>
-  
-  <!-- Level selection -->
-  <div id="level-selection">
-    <h3>Select a Level</h3>
-    <div>
-      <button onclick="startLevel(1)">Level 1</button>
-      <button onclick="startLevel(2)">Level 2</button>
-      <button onclick="startLevel(3)">Level 3</button>
-      <button onclick="startLevel(4)">Level 4</button>
-      <button onclick="startLevel(5)">Level 5</button>
-      <button onclick="startLevel(6)">Level 6</button>
-      <button onclick="startLevel(7)">Level 7</button>
-      <button onclick="startLevel(8)">Level 8</button>
-      <button onclick="startLevel(9)">Level 9</button>
-      <button onclick="startLevel(10)">Level 10</button>
-    </div>
+
+  <!-- User confirmation form -->
+  <div id="user-form">
+    <h3>Please enter your details</h3>
+    <input type="text" id="cssusername" placeholder="Enter your name" required>
+    <input type="text" id="cssmobile" placeholder="Enter mobile number" required>
+    <select id="levelselectioncss" required>
+      <option value="">🎯 Select Level</option>
+      <option value="1">LEVEL 1</option>
+        <option value="2">LEVEL 2</option>
+        <option value="3">LEVEL 3</option>
+        <option value="4">LEVEL 4</option>
+        <option value="5">LEVEL 5</option>
+        <option value="6">LEVEL 6</option>
+        <option value="7">LEVEL 7</option>
+        <option value="8">LEVEL 8</option>
+        <option value="9">LEVEL 9</option>
+        <option value="10">LEVEL 10</option>
+      </select>
+    <button onclick="csssubmitUser()">Start Quiz</button>
   </div>
 
-  <!-- Quiz -->
+   
+
+  <!-- Quiz screen -->
   <div id="quiz-container" style="display:none;">
     <div class="level-info" id="level-info"></div>
     <p id="question"></p>
     <div class="options" id="options"></div>
     <button id="nextBtn">Next</button>
-    <div id="feedback"></div>
   </div>
 
   <div id="result"></div>
 </div>
-
+<div id="cssprintusernum" style="display: none;"></div>
+<div id="cssprintac" style="display: none;"></div>
 <script>
 const quizData = {
   1: [
@@ -117,30 +76,116 @@ const quizData = {
     { question: "8. Which property controls the space between lines of text?", options: ["line-height", "spacing", "text-spacing", "font-spacing"], answer: "line-height" },
     { question: "9. Which property is used to change the font of text?", options: ["text-font", "font-family", "font-style", "typeface"], answer: "font-family" },
     { question: "10. Which CSS property is used to add shadows to text?", options: ["font-shadow", "text-decoration", "text-shadow", "shadow"], answer: "text-shadow" }
+  ],
+  3: [
+    { question: "11. Which CSS property sets the background image?", options: ["background-image", "image-background", "bg-image", "background"], answer: "background-image" },
+    { question: "12. How do you make a list not display bullet points?", options: ["list:none", "list-style:none", "bullet:none", "style:none"], answer: "list-style:none" },
+    { question: "13. Which property makes text italic?", options: ["font-italic", "font-style:italic", "text-italic", "style:italic"], answer: "font-style:italic" },
+    { question: "14. Which CSS property controls the visibility of an element?", options: ["display", "visible", "opacity", "visibility"], answer: "visibility" },
+    { question: "15. Which property specifies the space inside an element?", options: ["margin", "padding", "border", "spacing"], answer: "padding" }
+  ],
+  4: [
+    { question: "16. Which property specifies the space outside an element?", options: ["margin", "padding", "border", "spacing"], answer: "margin" },
+    { question: "17. Which property changes the position of an element?", options: ["float", "position", "align", "place"], answer: "position" },
+    { question: "18. What is the default value of the position property?", options: ["relative", "absolute", "static", "fixed"], answer: "static" },
+    { question: "19. Which CSS property makes text uppercase?", options: ["text-transform", "text-style", "font-transform", "capitalize"], answer: "text-transform" },
+    { question: "20. Which property sets the width of an element?", options: ["element-width", "width", "max-width", "min-width"], answer: "width" }
+  ],
+  5: [
+    { question: "21. Which property sets the height of an element?", options: ["size", "height", "max-height", "element-height"], answer: "height" },
+    { question: "22. Which property sets the maximum width of an element?", options: ["width", "max-width", "min-width", "limit-width"], answer: "max-width" },
+    { question: "23. Which CSS property is used to hide an element?", options: ["hide", "display:none", "visibility:hidden", "both b and c"], answer: "both b and c" },
+    { question: "24. Which property is used to create rounded corners?", options: ["border-radius", "corner-radius", "border-style", "round-border"], answer: "border-radius" },
+    { question: "25. Which property changes the cursor style?", options: ["cursor", "pointer", "mouse-style", "cursor-style"], answer: "cursor" }
+  ],
+  6: [
+    { question: "26. Which CSS property sets the z-index of an element?", options: ["index", "z-index", "stack", "layer"], answer: "z-index" },
+    { question: "27. Which property controls how overflow content is displayed?", options: ["overflow", "clip", "scroll", "hidden"], answer: "overflow" },
+    { question: "28. Which CSS property creates a shadow behind an element box?", options: ["box-shadow", "shadow-box", "element-shadow", "background-shadow"], answer: "box-shadow" },
+    { question: "29. Which CSS unit is relative to the root element font-size?", options: ["em", "rem", "%", "px"], answer: "rem" },
+    { question: "30. Which property is used to align items in a flex container?", options: ["justify-items", "align-items", "flex-align", "flex-item"], answer: "align-items" }
+  ],
+  7: [
+    { question: "31. Which property is used to distribute space in flexbox?", options: ["justify-content", "space-content", "flex-space", "align-content"], answer: "justify-content" },
+    { question: "32. Which property makes an element stick when scrolling?", options: ["position:sticky", "position:fixed", "position:static", "float"], answer: "position:sticky" },
+    { question: "33. Which property applies a grid layout?", options: ["display:grid", "display:flex", "grid-layout", "grid"], answer: "display:grid" },
+    { question: "34. Which CSS function is used to apply gradients?", options: ["gradient()", "linear-gradient()", "color-gradient()", "gradient-color()"], answer: "linear-gradient()" },
+    { question: "35. Which CSS property adds space between columns?", options: ["column-gap", "gap", "margin", "grid-gap"], answer: "column-gap" }
+  ],
+  8: [
+    { question: "36. Which property is used for animations?", options: ["animate", "animation", "transition", "motion"], answer: "animation" },
+    { question: "37. Which CSS property changes an element’s size smoothly?", options: ["transition", "animation", "motion", "effect"], answer: "transition" },
+    { question: "38. Which property specifies how an animation should progress?", options: ["animation-type", "animation-timing-function", "animation-progress", "timing"], answer: "animation-timing-function" },
+    { question: "39. Which property delays the start of an animation?", options: ["animation-delay", "animation-start", "delay", "transition-delay"], answer: "animation-delay" },
+    { question: "40. Which property repeats the animation infinitely?", options: ["animation-repeat", "animation-infinite", "animation-iteration-count", "repeat-infinite"], answer: "animation-iteration-count" }
+  ],
+  9: [
+    { question: "41. Which CSS property applies transformations like rotate?", options: ["transform", "rotate", "scale", "matrix"], answer: "transform" },
+    { question: "42. Which CSS function rotates an element?", options: ["rotate()", "transform-rotate()", "rotate-element()", "rotate-transform()"], answer: "rotate()" },
+    { question: "43. Which function scales an element in CSS?", options: ["scale()", "transform-scale()", "resize()", "zoom()"], answer: "scale()" },
+    { question: "44. Which function moves an element in CSS?", options: ["translate()", "move()", "position()", "shift()"], answer: "translate()" },
+    { question: "45. Which property controls the 3D perspective?", options: ["perspective", "depth", "transform-style", "z-depth"], answer: "perspective" }
+  ],
+  10: [
+    { question: "46. Which property controls stacking order?", options: ["z-order", "z-index", "stack", "order"], answer: "z-index" },
+    { question: "47. Which property adds a blur effect to elements?", options: ["filter:blur()", "blur()", "effect:blur", "shadow-blur"], answer: "filter:blur()" },
+    { question: "48. Which property changes an element’s shape into a circle?", options: ["border-radius:50%", "circle()", "shape:circle", "border-style:circle"], answer: "border-radius:50%" },
+    { question: "49. Which CSS feature allows custom properties?", options: ["CSS Variables", "Custom CSS", "User-defined CSS", "Inline properties"], answer: "CSS Variables" },
+    { question: "50. Which CSS syntax declares a variable?", options: ["--variable-name: value;", "var: value;", "$variable: value;", "@variable value;"], answer: "--variable-name: value;" }
   ]
-  // Levels 3–10 to be added here
 };
+
 
 let currentLevel = 1;
 let currentQ = 0;
 let score = 0;
+let username = "";
+let mobile = "";
 
 const questionEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
 const nextBtn = document.getElementById("nextBtn");
 const resultEl = document.getElementById("result");
 const levelInfo = document.getElementById("level-info");
-const feedbackEl = document.getElementById("feedback");
+
+// function submitUser() {
+//   username = document.getElementById("username").value.trim();
+//   mobile = document.getElementById("mobile").value.trim();
+//   if (!username || !mobile) { alert("Please enter both name and mobile number"); return; }
+//   document.getElementById("user-form").style.display = "none";
+//   document.getElementById("level-selection").style.display = "block";
+//   let levelselection=document.getElementById('level-selection')
+//   startLevel(levelselection)
+// }
+function bankcsssubmitUser() {
+  // username = document.getElementById("username").value.trim();
+  // mobile = document.getElementById("mobile").value.trim();
+  const selectedLevel = document.getElementById("levelselectioncss").value;
+
+  // if (!username || !mobile) {
+  //   alert("Please enter both name and mobile number");
+  //   return;
+  // }
+  // if (!selectedLevel) {
+  //   alert("Please select a level to start the quiz");
+  //   return;
+  // }
+
+  document.getElementById("user-form").style.display = "none";
+  // Directly start the quiz without showing level-selection
+  startLevel(parseInt(selectedLevel));
+}
+
 
 function startLevel(level) {
-  currentLevel = level;
+  const btn = document.getElementById(`level${level}-btn`);
+   currentLevel = level;
   currentQ = 0;
   score = 0;
-  document.getElementById("level-selection").style.display = "none";
+  // document.getElementById("level-selection").style.display = "none";
   document.getElementById("quiz-container").style.display = "block";
   resultEl.innerHTML = "";
-  feedbackEl.innerHTML = "";
-  levelInfo.innerText = "Level " + level;
+  levelInfo.innerText = `Level ${level} - ${username}`;
   loadQuestion();
 }
 
@@ -148,7 +193,6 @@ function loadQuestion() {
   let q = quizData[currentLevel][currentQ];
   questionEl.innerText = q.question;
   optionsEl.innerHTML = "";
-  feedbackEl.innerHTML = "";
   q.options.forEach(opt => {
     let label = document.createElement("label");
     label.innerHTML = `<input type="radio" name="option" value="${opt}"> ${opt}`;
@@ -158,51 +202,34 @@ function loadQuestion() {
 
 function getSelected() {
   let radios = document.getElementsByName("option");
-  for (let r of radios) {
-    if (r.checked) return r.value;
-  }
+  for (let r of radios) { if (r.checked) return r.value; }
   return null;
 }
 
 nextBtn.addEventListener("click", () => {
   let selected = getSelected();
-  if (!selected) {
-    feedbackEl.innerHTML = "⚠️ Please select an answer!";
-    feedbackEl.style.color = "orange";
-    return;
-  }
-
-  let correctAnswer = quizData[currentLevel][currentQ].answer;
-
-  if (selected === correctAnswer) {
-    score++;
-    feedbackEl.innerHTML = "✅ Correct! The answer is: " + correctAnswer;
-    feedbackEl.style.color = "green";
-  } else {
-    feedbackEl.innerHTML = "❌ Wrong! The correct answer is: " + correctAnswer;
-    feedbackEl.style.color = "red";
-  }
-
+  if (!selected) { alert("Please select an answer!"); return; }
+  if (selected === quizData[currentLevel][currentQ].answer) { score++; }
   currentQ++;
-
-  setTimeout(() => {
-    if (currentQ < quizData[currentLevel].length) {
-      loadQuestion();
-    } else {
-      // After finishing 5 questions
-      alert(`🎯 Level ${currentLevel} Completed!\nScore: ${score} / ${quizData[currentLevel].length}`);
-      document.getElementById("quiz-container").style.display = "none";
-      document.getElementById("level-selection").style.display = "block";
-
-      if (currentLevel === 10) {
-        resultEl.innerHTML = "🏆 You completed all 10 levels! Final Score: " + score;
-      } else {
-        resultEl.innerHTML = `✅ Level ${currentLevel} finished. You can now select another level.`;
-      }
-    }
-  }, 1000); // wait 1s before moving to next
+  if (currentQ < quizData[currentLevel].length) { loadQuestion(); }
+  else {
+    let ac=document.getElementById('cssprintac').innerText
+    resultEl.innerHTML = `🎯 Level ${currentLevel} Completed! Score: ${score} / ${quizData[currentLevel].length}<br>ADD THIS ${ac} ACCOUNT ${score *100} COINS`;
+    document.getElementById("quiz-container").style.display = "none";
+    // document.getElementById("level-selection").style.display = "block";
+    //  unlockNextLevel(currentLevel + 1);
+    updatelevelcss()
+  }
 });
+
+// function unlockNextLevel(level) {
+//   const btn = document.getElementById(`level${level}-btn`);
+//   if (btn) btn.classList.remove("locked");
+// }
 </script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script type="module" src="firebase.js"></script>
 
 </body>
 </html>

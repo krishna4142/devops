@@ -17,6 +17,7 @@
   #level-selection button { display: inline-block; margin: 5px; background: #28a745; }
   #level-selection button.locked { background: #ccc; cursor: not-allowed; }
   #level-selection button:hover:not(.locked) { background: #1e7e34; }
+  #levelselectionhtml{width: 85%;}
   #user-form input { display: block; margin: 10px auto; padding: 10px; width: 80%; border-radius: 8px; border: 1px solid #ddd; }
 </style>
 </head>
@@ -28,27 +29,25 @@
   <!-- User confirmation form -->
   <div id="user-form">
     <h3>Please enter your details</h3>
-    <input type="text" id="username" placeholder="Enter your name" required>
-    <input type="text" id="mobile" placeholder="Enter mobile number" required>
-    <button onclick="submitUser()">Start Quiz</button>
+    <input type="text" id="htmlusername" placeholder="Enter your name" required>
+    <input type="text" id="htmlmobile" placeholder="Enter mobile number" required>
+    <select id="levelselectionhtml" required>
+      <option value="">🎯 Select Level</option>
+      <option value="1">LEVEL 1</option>
+        <option value="2">LEVEL 2</option>
+        <option value="3">LEVEL 3</option>
+        <option value="4">LEVEL 4</option>
+        <option value="5">LEVEL 5</option>
+        <option value="6">LEVEL 6</option>
+        <option value="7">LEVEL 7</option>
+        <option value="8">LEVEL 8</option>
+        <option value="9">LEVEL 9</option>
+        <option value="10">LEVEL 10</option>
+      </select>
+    <button onclick="htmlsubmitUser()">Start Quiz</button>
   </div>
 
-  <!-- Level selection screen -->
-  <div id="level-selection" style="display:none;">
-    <h3>Select a Level</h3>
-    <div>
-      <button id="level1-btn" onclick="startLevel(1)">Level 1</button>
-      <button id="level2-btn" class="locked" onclick="startLevel(2)">Level 2</button>
-      <button id="level3-btn" class="locked" onclick="startLevel(3)">Level 3</button>
-      <button id="level4-btn" class="locked" onclick="startLevel(4)">Level 4</button>
-      <button id="level5-btn" class="locked" onclick="startLevel(5)">Level 5</button>
-      <button id="level6-btn" class="locked" onclick="startLevel(6)">Level 6</button>
-      <button id="level7-btn" class="locked" onclick="startLevel(7)">Level 7</button>
-      <button id="level8-btn" class="locked" onclick="startLevel(8)">Level 8</button>
-      <button id="level9-btn" class="locked" onclick="startLevel(9)">Level 9</button>
-      <button id="level10-btn" class="locked" onclick="startLevel(10)">Level 10</button>
-    </div>
-  </div>
+   
 
   <!-- Quiz screen -->
   <div id="quiz-container" style="display:none;">
@@ -60,7 +59,8 @@
 
   <div id="result"></div>
 </div>
-
+<div id="printusernum" style="display: none;"></div>
+<div id="printac" style="display: none;"></div>
 <script>
 const quizData = {
   1: [
@@ -71,7 +71,7 @@ const quizData = {
     { question: "5. Tag for hyperlink?", options: ["<a>","<link>","<href>","<hyper>"], answer: "<a>" }
   ],
   2: [
-    { question: "6. Element for paragraph?", options: ["<para>","<p>","<paragraph>","<text>"], answer: "<p>" },
+    { question: "6. Element for paragraph?", options: ["'<para>'","<p>","<paragraph>","<text>"], answer: "<p>" },
     { question: "7. Tag to insert image?", options: ["<picture>","<image>","<img>","<src>"], answer: "<img>" },
     { question: "8. Tag for unordered list?", options: ["<ul>","<ol>","<list>","<li>"], answer: "<ul>" },
     { question: "9. Attribute for alt text?", options: ["alt","title","name","src"], answer: "alt" },
@@ -147,21 +147,41 @@ const nextBtn = document.getElementById("nextBtn");
 const resultEl = document.getElementById("result");
 const levelInfo = document.getElementById("level-info");
 
-function submitUser() {
-  username = document.getElementById("username").value.trim();
-  mobile = document.getElementById("mobile").value.trim();
-  if (!username || !mobile) { alert("Please enter both name and mobile number"); return; }
+// function submitUser() {
+//   username = document.getElementById("username").value.trim();
+//   mobile = document.getElementById("mobile").value.trim();
+//   if (!username || !mobile) { alert("Please enter both name and mobile number"); return; }
+//   document.getElementById("user-form").style.display = "none";
+//   document.getElementById("level-selection").style.display = "block";
+//   let levelselection=document.getElementById('level-selection')
+//   startLevel(levelselection)
+// }
+function bankhtmlsubmitUser() {
+  // username = document.getElementById("username").value.trim();
+  // mobile = document.getElementById("mobile").value.trim();
+  const selectedLevel = document.getElementById("levelselectionhtml").value;
+
+  // if (!username || !mobile) {
+  //   alert("Please enter both name and mobile number");
+  //   return;
+  // }
+  // if (!selectedLevel) {
+  //   alert("Please select a level to start the quiz");
+  //   return;
+  // }
+
   document.getElementById("user-form").style.display = "none";
-  document.getElementById("level-selection").style.display = "block";
+  // Directly start the quiz without showing level-selection
+  startLevel(parseInt(selectedLevel));
 }
+
 
 function startLevel(level) {
   const btn = document.getElementById(`level${level}-btn`);
-  if (btn.classList.contains("locked")) { alert("This level is locked. Complete previous level to unlock."); return; }
-  currentLevel = level;
+   currentLevel = level;
   currentQ = 0;
   score = 0;
-  document.getElementById("level-selection").style.display = "none";
+  // document.getElementById("level-selection").style.display = "none";
   document.getElementById("quiz-container").style.display = "block";
   resultEl.innerHTML = "";
   levelInfo.innerText = `Level ${level} - ${username}`;
@@ -192,18 +212,22 @@ nextBtn.addEventListener("click", () => {
   currentQ++;
   if (currentQ < quizData[currentLevel].length) { loadQuestion(); }
   else {
-    resultEl.innerHTML = `🎯 Level ${currentLevel} Completed! Score: ${score} / ${quizData[currentLevel].length}`;
+    let ac=document.getElementById('printac').innerText
+    resultEl.innerHTML = `🎯 Level ${currentLevel} Completed! Score: ${score} / ${quizData[currentLevel].length}<br>ADD THIS ${ac} ACCOUNT ${score *100} COINS`;
     document.getElementById("quiz-container").style.display = "none";
-    document.getElementById("level-selection").style.display = "block";
-    unlockNextLevel(currentLevel + 1);
+    // document.getElementById("level-selection").style.display = "block";
+    //  unlockNextLevel(currentLevel + 1);
+    updatelevelhtml()
   }
 });
 
-function unlockNextLevel(level) {
-  const btn = document.getElementById(`level${level}-btn`);
-  if (btn) btn.classList.remove("locked");
-}
+// function unlockNextLevel(level) {
+//   const btn = document.getElementById(`level${level}-btn`);
+//   if (btn) btn.classList.remove("locked");
+// }
 </script>
-
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script type="module" src="firebase.js"></script>
 </body>
 </html>

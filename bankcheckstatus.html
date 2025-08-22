@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SS Bank - Account Check</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #4a148c, #0d47a1);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .container, .account-wrapper {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        padding: 30px 40px;
+        color: #fff;
+        width: 380px;
+        text-align: center;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    h2, .account-header {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+    input {
+        width: 90%;
+        padding: 12px;
+        margin: 12px 0;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        text-align: center;
+        background: rgba(255,255,255,0.3);
+        color: #fff;
+    }
+
+    input::placeholder {
+        color: #e0e0e0;
+    }
+
+    button {
+        background: linear-gradient(45deg, #ff9800, #f57c00);
+        color: #fff;
+        padding: 14px 30px;
+        font-size: 16px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 10px;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(255,152,0,0.5);
+    }
+
+    /* Account Details Layout */
+    .account-wrapper {
+        display: none;
+        width: 650px;
+        max-width: 90%;
+    }
+
+    .account-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .details-left {
+        text-align: left;
+        font-size: 18px;
+        line-height: 1.8;
+        flex: 1;
+    }
+
+    .details-left p {
+        margin: 6px 0;
+    }
+
+    .coins-box {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .coins-box h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .coins-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #fff;
+        color: #ff9800;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: inset 0 0 20px rgba(255,152,0,0.3), 0 0 20px rgba(255,255,255,0.2);
+        border: 6px solid;
+        border-image: linear-gradient(45deg, #ff9800, #f57c00) 1;
+    }
+
+    .back-btn {
+        margin-top: 25px;
+        background: transparent;
+        color: #fff;
+        font-weight: bold;
+        border: 2px solid #ff9800;
+        padding: 12px 30px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .back-btn:hover {
+        background: #ff9800;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(255,152,0,0.5);
+    }
+
+    @media(max-width: 700px) {
+        .account-details {
+            flex-direction: column;
+            text-align: center;
+        }
+        .details-left {
+            text-align: center;
+        }
+    }
+    span{
+        color: #f57c00;
+    }
+</style>
+</head>
+<body>
+
+<!-- Login Section -->
+<div class="container" id="login-section">
+    <h2>Bank Account Login</h2>
+    <input type="text" id="bankcheckuserNumber" placeholder="Enter User Number" required>
+    <input type="text" id="bankcheckuserName" placeholder="Enter Name" required>
+    <button onclick="bankcheckLogin()">Login</button>
+</div>
+
+<!-- Account Details Section -->
+<div class="account-wrapper" id="account-section">
+    <div class="account-header">SS BANK</div>
+    <div class="account-details">
+        <div class="details-left">
+            <p><strong>NAME:</strong> <span id="checkusernam"></span></p>
+            <p><strong>PH.NUMBER:</strong> <span id="checkusernumber"></span></p>
+            <p><strong>A/C:</strong><span id="checkuseraccount"></span></p>
+            <p><strong>IFSC:</strong> <span id="checkuserIFSC"></span></p>
+        </div>
+        <div class="coins-box">
+            <h3>AVAILABLE COINS</h3>
+            <div class="coins-circle">550 $</div>
+        </div>
+    </div>
+    <div style="text-align:center;">
+        <button class="back-btn" onclick="goBack()">BACK</button>
+    </div>
+</div>
+
+<script>
+
+    function goBack() {
+        document.getElementById('account-section').style.display = 'none';
+        document.getElementById('login-section').style.display = 'block';
+    }
+</script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script type="module" src="firebase.js"></script>
+
+</body>
+</html>
