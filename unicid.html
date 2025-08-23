@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="generateUniqueLink()">click</button>
+    <script>
+        function generateUniqueLink() {
+  const uniqueId = crypto.randomUUID(); // e.g., "f3bcbf96-1738-4b3a-a820-3b214a8f7e9b"
+  const link = `https://example.com/invite/${uniqueId}`;
+  return link;
+}
+
+
+
+    </script>
+</body>
+</html>

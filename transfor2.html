@@ -119,16 +119,28 @@
 
   <div class="container">
     <!-- Person A -->
-    <div class="card" id="cardA">
+    <div class="card" id="cardA"> 
+      <div class="beforeloin"> 
       <h3>Person A Login</h3>
       <input class="input-box" type="text" placeholder="Name" >
       <input class="input-box" type="text" placeholder="User Number">
-      <button class="btn">Login</button>
-      
+      <button class="btn" onclick="personAlogin()">Login</button>
+       </div>
+
+      <div class="card" id="viewuser" style="display: none;">
+        <div>NAME : sai</div>
+        <div>NUMBER : 344555</div>
+        <div>A/C :12334566</div>
+        <div class="balance-box">Balance: <span>1367</span></div>
+
+      </div>
+       
+     <div class="afterlogin card" style="display: none;"> 
       <h4>Person A1</h4>
       <div class="balance-box">Balance: <span>1367</span></div>
       <input class="input-box" type="number" id="sendAmount" placeholder="Send Amount">
       <button class="btn" onclick="sendCoins()">Send → B</button>
+      </div>
     </div>
 
     <!-- Person B -->
@@ -150,6 +162,11 @@
   </div>
 
   <script>
+    function personAlogin(){
+      document.querySelector('.beforeloin').style.display="none"
+      document.getElementById('viewuser').style.display="block"
+      document.querySelector('.afterlogin').style.display="block"
+    }
     function personBlogin(){
       let bname=document.getElementById('bname').value
       let bnumber=document.getElementById('bnumber').value

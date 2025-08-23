@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Person Form</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background: #f4f4f4;
+  }
+  .form-block {
+    background: #fff;
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .hidden {
+    display: none;
+  }
+  input {
+    display: block;
+    width: 95%;
+    padding: 8px;
+    margin: 8px 0;
+  }
+  button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<h2>Person A Form</h2>
+<div class="form-block" id="personA-block">
+  <label>Name (Person A):</label>
+  <input type="text" id="personA-name" placeholder="Enter your name">
+  
+  <label>Mobile (Person A):</label>
+  <input type="text" id="personA-mobile" placeholder="Enter your mobile">
+  
+  <button onclick="validatePersonA()">Submit Person A</button>
+
+  <!-- Hidden Person B Form -->
+  <div id="personB-block" class="hidden">
+    <hr>
+    <h3>Person B Details</h3>
+    <label>Name (Person B):</label>
+    <input type="text" id="personB-name" placeholder="Enter name">
+    
+    <label>Mobile (Person B):</label>
+    <input type="text" id="personB-mobile" placeholder="Enter mobile">
+    
+    <button onclick="submitBoth()">Submit Both</button>
+  </div>
+</div>
+
+<script>
+function validatePersonA() {
+  const nameA = document.getElementById('personA-name').value.trim();
+  const mobileA = document.getElementById('personA-mobile').value.trim();
+
+  if(nameA === "" || mobileA === ""){
+    alert("Please enter both name and mobile for Person A.");
+    return;
+  }
+
+  if(!/^[0-9]{10}$/.test(mobileA)){
+    alert("Enter a valid 10-digit mobile number for Person A.");
+    return;
+  }
+
+  // ✅ If valid, show Person B form inside same block
+  document.getElementById('personB-block').classList.remove('hidden');
+}
+
+function submitBoth() {
+  const nameA = document.getElementById('personA-name').value.trim();
+  const mobileA = document.getElementById('personA-mobile').value.trim();
+  const nameB = document.getElementById('personB-name').value.trim();
+  const mobileB = document.getElementById('personB-mobile').value.trim();
+
+  if(nameB === "" || mobileB === ""){
+    alert("Please enter both name and mobile for Person B.");
+    return;
+  }
+
+  if(!/^[0-9]{10}$/.test(mobileB)){
+    alert("Enter a valid 10-digit mobile number for Person B.");
+    return;
+  }
+
+  alert(`✅ Person A: ${nameA}, ${mobileA}\n✅ Person B: ${nameB}, ${mobileB}`);
+}
+</script>
+
+</body>
+</html>

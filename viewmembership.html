@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SS Bank - Account Check</title>
+<title>SS MemberShip - Account Check</title>
 <style>
     body {
         margin: 0;
@@ -167,10 +167,10 @@
 
 <!-- Login Section -->
 <div class="container" id="login-section">
-    <h2>Bank Account Login</h2>
-    <input type="text" id="bankcheckuserNumber" placeholder="Enter User Number" required>
-    <input type="text" id="bankcheckuserName" placeholder="Enter Name" required>
-    <button onclick="bankcheckLogin()">Login</button>
+    <h2>MemberShip Account Login</h2>
+    <input type="text" id="bankmembershipNumber" placeholder="Enter User Number" required>
+    <input type="text" id="bankmembershipuserName" placeholder="Enter Name" required>
+    <button onclick="bankmembershipLogin()">Login</button>
 </div>
 
 <!-- Account Details Section -->
@@ -178,15 +178,16 @@
     <div class="account-header">SS BANK</div>
     <div class="account-details">
         <div class="details-left">
-            <p><strong>NAME:</strong> <span id="checkusernam"></span></p>
-            <p><strong>PH.NUMBER:</strong> <span id="checkusernumber"></span></p>
-            <p><strong>A/C:</strong><span id="checkuseraccount"></span></p>
-            <p><strong>IFSC:</strong> <span id="checkuserIFSC"></span></p>
+            <p><strong>NAME:</strong> <span id="membershipusernam"></span></p>
+            <p><strong>PH.NUMBER:</strong> <span id="membershipusernumber"></span></p>
+            <p><strong>HTML LEVEL:</strong><span id="membershiphtml"></span></p>
+            <p><strong>CSS LEVEL:</strong> <span id="membershipcss"></span></p>
+            <p><strong>JAVASCRIPT LEVEL:</strong> <span id="membershipscript"></span></p>
         </div>
-        <div class="coins-box">
+        <!-- <div class="coins-box">
             <h3>AVAILABLE COINS</h3>
             <div class="coins-circle" id="checkcoins"> $ </div>
-        </div>
+        </div> -->
     </div>
     <div style="text-align:center;">
         <button class="back-btn" onclick="goBack()">BACK</button>

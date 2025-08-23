@@ -199,6 +199,7 @@ window.registerMembershipForm = function(e) {
     }
     let ht=["0"]
     let cs=["0"]
+    let js=["0"]
     // check if user exists
     database.ref('bankuser/' + phone).get()
       .then((snapshot) => {
@@ -218,6 +219,8 @@ window.registerMembershipForm = function(e) {
           IFSC:"",
           html:ht,
           css:cs,
+          javascript:js,
+          coins:'0'
         });
       })
       .then((result) => {
@@ -413,6 +416,41 @@ window.bankcheckLogin = function () {
                 document.getElementById('checkusernumber').innerText=`${data.number}`
                 document.getElementById('checkuseraccount').innerText=`${data.Account}`
                 document.getElementById('checkuserIFSC').innerText=`${data.IFSC}`
+                document.getElementById('checkcoins').innerText=`${data.coins}`
+              }
+              else{
+                alert('ENTER CURRECT USER NAME')
+              }
+            }
+            else{
+              alert('ENTER CURRECT DETAILS')
+            }
+          })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+}
+
+//**************************** VIEW MEMBERSHI ****************************/
+window.bankmembershipLogin = function () {
+  const phone = document.getElementById('bankmembershipNumber').value.trim();
+  const userName = document.getElementById('bankmembershipuserName').value.trim();
+  database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              if(userName==data.Fullname){
+
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('account-section').style.display = 'block';
+
+
+                document.getElementById('membershipusernam').innerText=`${data.Fullname}`
+                document.getElementById('membershipusernumber').innerText=`${data.number}`
+                document.getElementById('membershiphtml').innerText=`${data.html.length}`
+                document.getElementById('membershipcss').innerText=`${data.css.length}`
+                document.getElementById('membershipscript').innerText=`${data.javascript.length}`
               }
               else{
                 alert('ENTER CURRECT USER NAME')
@@ -566,3 +604,97 @@ window.updatelevelcss = function () {
         });
 }
 
+///***************************** JAVASCRIPT QUESTIONS ****************************/
+
+window.javascriptsubmitUser = function () {
+  const phone = document.getElementById('javascriptmobile').value.trim();
+  const userName = document.getElementById('javascriptusername').value.trim();
+  const levelselectionjavascript=document.getElementById('levelselectionjavascript').value.trim()
+  database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              if(userName==data.Fullname){
+                if(levelselectionjavascript==data.javascript.length){
+                  document.getElementById('javascriptprintusernum').innerText=`${data.number}`
+                  document.getElementById('javascriptprintac').innerText=`${data.Account}`
+
+                  window.bankjavascriptsubmitUser()
+                  // let html=data.html
+                  //     html.push(`${(data.html.length)+1}`)
+                  //     database.ref('bankuser/' + phone).update({
+                  //       html:html,
+                  //     })
+                  //     .then(() => {
+                  //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
+                  //     })
+                  //     .catch((error) => {
+                  //       alert('Error: ' + error.message)
+                  //     });
+                }
+                else if(levelselectionjavascript<=data.javascript.length){
+                  alert('YOU ARE COMPLETED THIS LEVEL')
+                }
+                else{
+                  alert('YOU ARE NOT ELEGIBLE THIS LEVEL , CHOUSE CURRRECT LEVEL')
+                }
+
+              }}
+
+          })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+
+}
+window.updateleveljavascript = function () {
+    const phone = document.getElementById('javascriptprintusernum').innerText
+   database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              addingcoins(phone)
+               let javascript=data.javascript
+                      javascript.push(`${(data.javascript.length)+1}`)
+                      database.ref('bankuser/' + phone).update({
+                        javascript:javascript,
+                      })
+                      .then(() => {
+                        alert(`User "${data.Fullname}" successfully completed .YOUR ELRGIBLE FORNEXT LEVEL "`)
+                      })
+                      .catch((error) => {
+                        alert('Error: ' + error.message)
+                      });
+            }
+        })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+}
+
+//********************* COINS BLOCK **************************/
+window.addingcoins = function (phone) {
+    database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              let javascriptscroe=document.getElementById('javascriptscroe').innerText
+              let coins=data.coins
+              coins+=parseInt(javascriptscroe);
+              database.ref('bankuser/' + phone).update({
+                        coins:coins,
+                      })
+            }
+            })
+            .catch((error) => {
+              alert('Error: ' + error.message)
+            });
+}
+
+function generateUniqueLink() {
+  const uniqueId = crypto.randomUUID(); // e.g., "f3bcbf96-1738-4b3a-a820-3b214a8f7e9b"
+  const link = `https://example.com/invite/${uniqueId}`;
+  return link;
+}
