@@ -59,8 +59,11 @@
 
   <div id="result"></div>
 </div>
+ 
 <div id="printusernum" style="display: none;"></div>
 <div id="printac" style="display: none;"></div>
+<div id="htmlscroe">0</div>
+
 <script>
 const quizData = {
   1: [
@@ -215,7 +218,7 @@ nextBtn.addEventListener("click", () => {
     let ac=document.getElementById('printac').innerText
     resultEl.innerHTML = `🎯 Level ${currentLevel} Completed! Score: ${score} / ${quizData[currentLevel].length}<br>ADD THIS ${ac} ACCOUNT ${score *100} COINS`;
     document.getElementById("quiz-container").style.display = "none";
-    // document.getElementById("level-selection").style.display = "block";
+    document.getElementById("htmlscroe").innerText =`${score*100}`;
     //  unlockNextLevel(currentLevel + 1);
     updatelevelhtml()
   }

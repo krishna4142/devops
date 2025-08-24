@@ -28,6 +28,7 @@ const firebaseConfig = {
       const address=document.getElementById('address').value.trim()
       const level=['one001']
       const htnum=`DEVEPS${Math.floor(Math.random()*1000)}`
+       
       // level.push('sec342')
       
 
@@ -60,7 +61,9 @@ const firebaseConfig = {
                   number:number,
                   level:level,
                   htnum:htnum,
-                  profileImage: base64Image                
+                  profileImage: base64Image ,
+                  coins:0,
+                  unicid:['link']               
                 })
                 
                 .then(() => {
@@ -142,6 +145,11 @@ window.createbankaccount = function(e) {
     let phone = document.getElementById('bankphone').value.trim();
     let address = document.getElementById('bankaddress').value.trim();
 
+    let ht=["0"]
+    let cs=["0"]
+    let js=["0"]
+    let link=['link'];
+
     console.log("Collected values:", { fullname, dob, email, phone, address });
 
     if (!fullname || !dob || !email || !phone || !address) {
@@ -160,7 +168,14 @@ window.createbankaccount = function(e) {
                         number: phone,
                         Address:address,
                         Account:account,
-                        IFSC:"SS038BANK"
+                        IFSC:"SS038BANK",
+                        IFSC:"",
+                        html:ht,
+                        css:cs,
+                        javascript:js,
+                        coins:parseInt(0),
+                        transactionlink:link,
+                        java:js
                     })
                     .then(() => {
                         console.log("✅ Data successfully written to Firebase!");
@@ -200,6 +215,7 @@ window.registerMembershipForm = function(e) {
     let ht=["0"]
     let cs=["0"]
     let js=["0"]
+    let link=['link'];
     // check if user exists
     database.ref('bankuser/' + phone).get()
       .then((snapshot) => {
@@ -220,7 +236,9 @@ window.registerMembershipForm = function(e) {
           html:ht,
           css:cs,
           javascript:js,
-          coins:'0'
+          coins:parseInt(0),
+          transactionlink:link,
+          java:js
         });
       })
       .then((result) => {
@@ -477,21 +495,26 @@ window.htmlsubmitUser = function () {
             if (snapshot.exists()) {
               if(userName==data.Fullname){
                 if(levelselectionhtml==data.html.length){
-                  document.getElementById('printusernum').innerText=`${data.number}`
-                  document.getElementById('printac').innerText=`${data.Account}`
-
-                  window.bankhtmlsubmitUser()
-                  // let html=data.html
-                  //     html.push(`${(data.html.length)+1}`)
-                  //     database.ref('bankuser/' + phone).update({
-                  //       html:html,
-                  //     })
-                  //     .then(() => {
-                  //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
-                  //     })
-                  //     .catch((error) => {
-                  //       alert('Error: ' + error.message)
-                  //     });
+                  if(data.Account.length>4){
+                      document.getElementById('printusernum').innerText=`${data.number}`
+                      document.getElementById('printac').innerText=`${data.Account}`
+                     
+                      window.bankhtmlsubmitUser()
+                      // let html=data.html
+                      //     html.push(`${(data.html.length)+1}`)
+                      //     database.ref('bankuser/' + phone).update({
+                      //       html:html,
+                      //     })
+                      //     .then(() => {
+                      //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
+                      //     })
+                      //     .catch((error) => {
+                      //       alert('Error: ' + error.message)
+                      //     });
+                  }
+                  else{
+                  alert('YOU ARE MUST BE CREATE SS BANK ACCOUNT')
+                 }
                 }
                 else if(levelselectionhtml<=data.html.length){
                   alert('YOU ARE COMPLETED THIS LEVEL')
@@ -511,11 +534,14 @@ window.htmlsubmitUser = function () {
 }
 window.updatelevelhtml = function () {
     const phone = document.getElementById('printusernum').innerText
+    let name='html'
    database.ref('bankuser/' + phone).once('value')
         .then((snapshot) => {
           const data = snapshot.val();
             if (snapshot.exists()) {
                let html=data.html
+               if(data.Account.length>4){
+                addingcoins(phone,name)
                       html.push(`${(data.html.length)+1}`)
                       database.ref('bankuser/' + phone).update({
                         html:html,
@@ -526,7 +552,11 @@ window.updatelevelhtml = function () {
                       .catch((error) => {
                         alert('Error: ' + error.message)
                       });
-            }
+                 }
+                 else{
+                  alert('YOU ARE MUST BE CREATE SS BANK ACCOUNT')
+                 }
+              }
         })
         .catch((error) => {
           console.error("Firebase Error:", error);
@@ -547,21 +577,26 @@ window.csssubmitUser = function () {
             if (snapshot.exists()) {
               if(userName==data.Fullname){
                 if(levelselectionhtml==data.css.length){
-                  document.getElementById('cssprintusernum').innerText=`${data.number}`
-                  document.getElementById('cssprintac').innerText=`${data.Account}`
+                  if(data.Account>3){
+                      document.getElementById('cssprintusernum').innerText=`${data.number}`
+                      document.getElementById('cssprintac').innerText=`${data.Account}`
 
-                  window.bankcsssubmitUser()
-                  // let html=data.html
-                  //     html.push(`${(data.html.length)+1}`)
-                  //     database.ref('bankuser/' + phone).update({
-                  //       html:html,
-                  //     })
-                  //     .then(() => {
-                  //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
-                  //     })
-                  //     .catch((error) => {
-                  //       alert('Error: ' + error.message)
-                  //     });
+                      window.bankcsssubmitUser()
+                      // let html=data.html
+                      //     html.push(`${(data.html.length)+1}`)
+                      //     database.ref('bankuser/' + phone).update({
+                      //       html:html,
+                      //     })
+                      //     .then(() => {
+                      //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
+                      //     })
+                      //     .catch((error) => {
+                      //       alert('Error: ' + error.message)
+                      //     });
+                  }
+                  else{
+                    alert('YOU MUST BE CREATE SS BANK ACCOUNT')
+                  }
                 }
                 else if(levelselectioncss<=data.css.length){
                   alert('YOU ARE COMPLETED THIS LEVEL')
@@ -581,11 +616,13 @@ window.csssubmitUser = function () {
 }
 window.updatelevelcss = function () {
     const phone = document.getElementById('cssprintusernum').innerText
+    let name='css'
    database.ref('bankuser/' + phone).once('value')
         .then((snapshot) => {
           const data = snapshot.val();
             if (snapshot.exists()) {
                let css=data.css
+               addingcoins(phone,name)
                       css.push(`${(data.css.length)+1}`)
                       database.ref('bankuser/' + phone).update({
                         css:css,
@@ -616,22 +653,27 @@ window.javascriptsubmitUser = function () {
             if (snapshot.exists()) {
               if(userName==data.Fullname){
                 if(levelselectionjavascript==data.javascript.length){
-                  document.getElementById('javascriptprintusernum').innerText=`${data.number}`
-                  document.getElementById('javascriptprintac').innerText=`${data.Account}`
+                      if(data.Account>2){
+                      document.getElementById('javascriptprintusernum').innerText=`${data.number}`
+                      document.getElementById('javascriptprintac').innerText=`${data.Account}`
 
-                  window.bankjavascriptsubmitUser()
-                  // let html=data.html
-                  //     html.push(`${(data.html.length)+1}`)
-                  //     database.ref('bankuser/' + phone).update({
-                  //       html:html,
-                  //     })
-                  //     .then(() => {
-                  //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
-                  //     })
-                  //     .catch((error) => {
-                  //       alert('Error: ' + error.message)
-                  //     });
-                }
+                      window.bankjavascriptsubmitUser()
+                      // let html=data.html
+                      //     html.push(`${(data.html.length)+1}`)
+                      //     database.ref('bankuser/' + phone).update({
+                      //       html:html,
+                      //     })
+                      //     .then(() => {
+                      //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
+                      //     })
+                      //     .catch((error) => {
+                      //       alert('Error: ' + error.message)
+                      //     });
+                      }
+                      else{
+                        alert('YOU ARE MUST BE CREATE SS BANK ACCOUNT')
+                      }
+                 }
                 else if(levelselectionjavascript<=data.javascript.length){
                   alert('YOU ARE COMPLETED THIS LEVEL')
                 }
@@ -650,11 +692,12 @@ window.javascriptsubmitUser = function () {
 }
 window.updateleveljavascript = function () {
     const phone = document.getElementById('javascriptprintusernum').innerText
+    let name='javascript'
    database.ref('bankuser/' + phone).once('value')
         .then((snapshot) => {
           const data = snapshot.val();
             if (snapshot.exists()) {
-              addingcoins(phone)
+              addingcoins(phone,name)
                let javascript=data.javascript
                       javascript.push(`${(data.javascript.length)+1}`)
                       database.ref('bankuser/' + phone).update({
@@ -674,15 +717,117 @@ window.updateleveljavascript = function () {
         });
 }
 
+
+///***************************** JAVA QUESTIONS ****************************/
+
+window.javasubmitUser = function () {
+  const phone = document.getElementById('javamobile').value.trim();
+  const userName = document.getElementById('javausername').value.trim();
+  const levelselectionjavascript=document.getElementById('levelselectionjava').value.trim()
+  database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              if(userName==data.Fullname){
+                if(levelselectionjavascript==data.javascript.length){
+                      if(data.Account>2){
+                      document.getElementById('javaprintusernum').innerText=`${data.number}`
+                      document.getElementById('javaprintac').innerText=`${data.Account}`
+
+                      window.bankjavascriptsubmitUser()
+                      // let html=data.html
+                      //     html.push(`${(data.html.length)+1}`)
+                      //     database.ref('bankuser/' + phone).update({
+                      //       html:html,
+                      //     })
+                      //     .then(() => {
+                      //       alert(`User "${username}" saved successfully completed .YOUR NEXT LEVEL PASSWORD"${level[level.length-1]}"`)
+                      //     })
+                      //     .catch((error) => {
+                      //       alert('Error: ' + error.message)
+                      //     });
+                      }
+                      else{
+                        alert('YOU ARE MUST BE CREATE SS BANK ACCOUNT')
+                      }
+                 }
+                else if(levelselectionjavascript<=data.javascript.length){
+                  alert('YOU ARE COMPLETED THIS LEVEL')
+                }
+                else{
+                  alert('YOU ARE NOT ELEGIBLE THIS LEVEL , CHOUSE CURRRECT LEVEL')
+                }
+
+              }}
+
+          })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+
+}
+window.updateleveljava = function () {
+    const phone = document.getElementById('javaprintusernum').innerText
+    let name='java'
+   database.ref('bankuser/' + phone).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              addingcoins(phone,name)
+               let java=data.java
+                      java.push(`${(data.java.length)+1}`)
+                      database.ref('bankuser/' + phone).update({
+                        java:java,
+                      })
+                      .then(() => {
+                        alert(`User "${data.Fullname}" successfully completed .YOUR ELRGIBLE FORNEXT LEVEL "`)
+                      })
+                      .catch((error) => {
+                        alert('Error: ' + error.message)
+                      });
+            }
+        })
+        .catch((error) => {
+          console.error("Firebase Error:", error);
+          alert("Error: " + error.message);
+        });
+}
+
 //********************* COINS BLOCK **************************/
-window.addingcoins = function (phone) {
+window.addingcoins = function (phone,name) {
     database.ref('bankuser/' + phone).once('value')
         .then((snapshot) => {
           const data = snapshot.val();
             if (snapshot.exists()) {
-              let javascriptscroe=document.getElementById('javascriptscroe').innerText
+              let tem=0;
+              if(name=='html'){
+                alert('html')
+              let htmlscroe=document.getElementById('htmlscroe').innerText
+              htmlscroe=parseInt(htmlscroe)
+              tem+=htmlscroe
+              }
+               else if(name=='css'){
+                let cssscroe=document.getElementById('cssscroe').innerText
+              cssscroe=parseInt(cssscroe)
+              tem+=cssscroe
+               }
+               else if(name=='javascript'){
+
+               let javascriptscroe=document.getElementById('javascriptscroe').innerText
+              javascriptscroe=parseInt(javascriptscroe)
+              tem+=javascriptscroe
+               }
+              else if(name=='java'){
+              let javascroe=document.getElementById('javascroe').innerText
+              javascroe=parseInt(javascroe)
+              tem+=javascroe
+              }
+              else{alert('error')}
+              
+              
               let coins=data.coins
-              coins+=parseInt(javascriptscroe);
+              coins+=tem;
               database.ref('bankuser/' + phone).update({
                         coins:coins,
                       })
@@ -693,8 +838,69 @@ window.addingcoins = function (phone) {
             });
 }
 
-function generateUniqueLink() {
-  const uniqueId = crypto.randomUUID(); // e.g., "f3bcbf96-1738-4b3a-a820-3b214a8f7e9b"
-  const link = `https://example.com/invite/${uniqueId}`;
-  return link;
+// function generateUniqueLink() {
+//   const uniqueId = crypto.randomUUID(); // e.g., "f3bcbf96-1738-4b3a-a820-3b214a8f7e9b"
+//   const link = `https://example.com/invite/${uniqueId}`;
+//   return link;
+// }
+
+
+//****************************** BANKPERSONB LOGIN SESSION ****************************/
+window.bankpersonBlogin = function () {
+  alert('ok')
+  const name = document.getElementById('bName').value;
+  const number = document.getElementById('bNumber').value.trim();
+  database.ref('users/' + number).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              alert('exit')
+               document.getElementById('bDisplayName').innerText = `${data.username}`;
+               document.getElementById('bDisplayNumber').innerText = `${data.number}`;
+               document.getElementById('bBalance').innerText=`${data.coins}`
+
+               const uniqueId = crypto.randomUUID();
+               const link = `https://invite/${uniqueId}`;
+               document.getElementById("upidText").innerText = `${link}`;
+     
+               let unicid=data.unicid
+                
+               
+                unicid.push(link)
+               
+                database.ref('bankuser/' + number).update({
+                       transactionlink:unicid,
+                      })
+
+              database.ref('users/' + number).update({
+                        unicid:unicid,
+                      })
+                      .then(() => {
+                        alert(`User "${data.username}" LOGIN successfully ........... "`)
+                      })
+                      .catch((error) => {
+                        alert('DEVOPS USER ID DOSE NOT EXIT PLESE ENTER CURRECT VALUES ......')
+                      });
+                      window.personBlogin()
+            }
+            })
+            .catch((error) => {
+              alert('Error: ' + error.message)
+            });
+}
+//****************************** BANKPERSON A LOGIN SESSION ****************************/
+
+window.bankpersonBlogin = function () {
+  const name = document.getElementById('aName').value;
+    const number = document.getElementById('aNumber').value;
+    database.ref('banksers/' + number).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+              alert('exit')
+            }
+            })
+            .catch((error) => {
+              alert('Error: ' + error.message)
+            });
 }

@@ -6,12 +6,20 @@
     <title>Document</title>
 </head>
 <body>
+    <div id="id">0</div>
     <button onclick="generateUniqueLink()">click</button>
     <script>
         function generateUniqueLink() {
-  const uniqueId = crypto.randomUUID(); // e.g., "f3bcbf96-1738-4b3a-a820-3b214a8f7e9b"
-  const link = `https://example.com/invite/${uniqueId}`;
-  return link;
+//   const uniqueId = crypto.randomUUID(); // e.g., "f3bcbf96-1738-4b3a-a820-3b214a8f7e9b"
+//   const link = `https://example.com/invite/${uniqueId}`;
+//   return link;
+let id=document.getElementById('id').innerText
+if(id>0){
+    alert('ok')
+}
+else{
+    alert('not ok')
+}
 }
 
 

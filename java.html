@@ -17,7 +17,7 @@
   #level-selection button { display: inline-block; margin: 5px; background: #28a745; }
   #level-selection button.locked { background: #ccc; cursor: not-allowed; }
   #level-selection button:hover:not(.locked) { background: #1e7e34; }
-  #levelselectionjavascript{width: 85%;}
+  #levelselectionjava{width: 85%;}
   #user-form input { display: block; margin: 10px auto; padding: 10px; width: 80%; border-radius: 8px; border: 1px solid #ddd; }
 </style>
 </head>
@@ -29,9 +29,9 @@
   <!-- User confirmation form -->
   <div id="user-form">
     <h3>Please enter your details</h3>
-    <input type="text" id="javascriptusername" placeholder="Enter your name" required>
-    <input type="text" id="javascriptmobile" placeholder="Enter mobile number" required>
-    <select id="levelselectionjavascript" required>
+    <input type="text" id="javausername" placeholder="Enter your name" required>
+    <input type="text" id="javamobile" placeholder="Enter mobile number" required>
+    <select id="levelselectionjava" required>
       <option value="">🎯 Select Level</option>
         <option value="1">LEVEL 1</option>
         <option value="2">LEVEL 2</option>
@@ -63,8 +63,18 @@
         <option value="28">LEVEL 28</option>
         <option value="29">LEVEL 29</option>
         <option value="30">LEVEL 30</option>
+        <option value="31">LEVEL 31</option>
+        <option value="32">LEVEL 32</option>
+        <option value="33">LEVEL 33</option>
+        <option value="34">LEVEL 34</option>
+        <option value="35">LEVEL 35</option>
+        <option value="36">LEVEL 36</option>
+        <option value="37">LEVEL 37</option>
+        <option value="38">LEVEL 38</option>
+        <option value="39">LEVEL 39</option>
+        <option value="40">LEVEL 40</option>
       </select>
-    <button onclick="javascriptsubmitUser()">Start Quiz</button>
+    <button onclick="javasubmitUser()">Start Quiz</button>
   </div>
 
    
@@ -79,9 +89,9 @@
 
   <div id="result"></div>
 </div>
-<div id="javascriptprintusernum" style="display: none;"></div>
-<div id="javascriptprintac" style="display: none;"></div>
-<div id="javascriptscroe">0</div>
+<div class="javaprintusernum" style="display: none;"></div>
+<div id="javaprintac" style="display: none;"></div>
+<div id="javascroe">0</div>
 
 <script>
  
@@ -108,10 +118,10 @@ const levelInfo = document.getElementById("level-info");
 //   let levelselection=document.getElementById('level-selection')
 //   startLevel(levelselection)
 // }
-function bankjavascriptsubmitUser() {
+function bankjavasubmitUser() {
   // username = document.getElementById("username").value.trim();
   // mobile = document.getElementById("mobile").value.trim();
-  const selectedLevel = document.getElementById("levelselectionjavascript").value;
+  const selectedLevel = document.getElementById("levelselectionjava").value;
 
   // if (!username || !mobile) {
   //   alert("Please enter both name and mobile number");
@@ -164,12 +174,12 @@ nextBtn.addEventListener("click", () => {
   currentQ++;
   if (currentQ < quizData[currentLevel].length) { loadQuestion(); }
   else {
-    let ac=document.getElementById('javascriptprintac').innerText
+    let ac=document.getElementById('javaprintac').innerText
     resultEl.innerHTML = `🎯 Level ${currentLevel} Completed! Score: ${score} / ${quizData[currentLevel].length}<br>ADD THIS ${ac} ACCOUNT ${score *100} COINS`;
     document.getElementById("quiz-container").style.display = "none";
-    document.getElementById("javascriptscroe").innerText =`${score*100}`;
+    document.getElementById("javascroe").innerText =`${score*100}`;
     //  unlockNextLevel(currentLevel + 1);
-    updateleveljavascript()
+    updateleveljava()
   }
 });
 
@@ -181,7 +191,7 @@ nextBtn.addEventListener("click", () => {
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script type="module" src="firebase.js"></script>
-<script src="javascript.js"></script>
+<script src="java.js"></script>
 
 </body>
 </html>
