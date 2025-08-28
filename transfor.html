@@ -130,7 +130,7 @@
       <h3> SS BANK Person Page</h3>
       <input class="input-box" type="text" placeholder="Name" id="aName">
       <input class="input-box" type="text" placeholder="User Number" id="aNumber">
-      <button class="btn" onclick="bankpersonAlogin()">Login</button>
+      <button class="btn" onclick="bankpersonAloginsai()">Login</button>
     </div>
 
     <div class="afterlogin" style="display: none;"> 
@@ -142,13 +142,19 @@
       <button class="btn" onclick="sendCoins()">Send → B</button> -->
 
       <!-- Extra Form after login -->
-      <div class="extra-form">
+      <div class="extra-form" id="extraform">
         <h4>Enter Person B Details</h4>
         <input class="input-box" type="text" placeholder="Enter Person B Number" id="aEnterBNumber">
         <input class="input-box" type="text" placeholder="Enter Person B UPID" id="aEnterBUPID">
         <input class="input-box" type="number" id="sendAmount" placeholder="Send Amount">
-        <button class="btn" onclick="sendCoins()">verfy</button>
+        <button class="btn" onclick="bankpersonAverify()">verfy</button>
+       </div>
+      <div class="extraafterlogin" id="extraafterlogin" style="display: none;">
+        <h5 id="b_number">dsh</h5>
+        <h5 id="b_link">yy</h5>
+        <h5 id="b_transforcoins">gg</h5>
         <button class="btn" onclick="sendCoins()">Send → B</button>
+
       </div>
     </div>
   </div>
@@ -156,10 +162,10 @@
   <!-- Person B -->
   <div class="card" id="cardB">
     <div class="beforeloginB">
-      <h3>Person B Login</h3>
+      <h3>Person B Login (DevOps exam Persons only)</h3>
       <input class="input-box" type="text" placeholder="Name" id="bName">
       <input class="input-box" type="text" placeholder="User Number" id="bNumber">
-      <button class="btn" onclick="bankpersonBlogin()">Login</button>
+      <button class="btn" onclick="window.bankpersonBloginsai()">Login</button>
     </div>
 
     <div class="openbblock" style="display: none;"> 
@@ -175,9 +181,13 @@
     </div>
   </div>
 </div>
-
+<div id="bankcoins" style="display: none;"></div>
 <script>
-  function personAlogin() {
+  // function sai(){
+  //   alert('ok')
+  //   window.bankpersonBlogin()
+  // }
+  function bankpersonAlogin() {
     // const name = document.getElementById('aName').value;
     // const number = document.getElementById('aNumber').value;
 
@@ -237,8 +247,10 @@
     alert("Current Person B Balance: " + balance);
   }
 </script>
+<script type="module" src="firebase.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script type="module" src="firebase.js"></script>
+<!-- <script type="module" src="firebase.js"></script> -->
 </body>
 </html>

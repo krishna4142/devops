@@ -117,7 +117,7 @@ const firebaseConfig = {
                     document.getElementById('getnumber').innerText=`${data.number}`
                     document.getElementById('getlevel').innerText=`${data.level.length}`
                     document.getElementById('account').innerText=`SS${data.htnum}`
-                    document.getElementById('usercoins').innerText=`${500}`
+                    document.getElementById('usercoins').innerText=`${data.coins}`
 
                 } else {
                     alert('Username or Mobile Number does not match.');
@@ -844,10 +844,12 @@ window.addingcoins = function (phone,name) {
 //   return link;
 // }
 
-
+console.log('sai krishna')
 //****************************** BANKPERSONB LOGIN SESSION ****************************/
-window.bankpersonBlogin = function () {
-  alert('ok')
+window.bankpersonBloginsai = function () {
+    alert("B login clicked ✅");
+
+
   const name = document.getElementById('bName').value;
   const number = document.getElementById('bNumber').value.trim();
   database.ref('users/' + number).once('value')
@@ -890,14 +892,62 @@ window.bankpersonBlogin = function () {
 }
 //****************************** BANKPERSON A LOGIN SESSION ****************************/
 
-window.bankpersonBlogin = function () {
+window.bankpersonAloginsai = function () {
+  alert('ok')
   const name = document.getElementById('aName').value;
-    const number = document.getElementById('aNumber').value;
-    database.ref('banksers/' + number).once('value')
+    const phone = document.getElementById('aNumber').value;
+     database.ref('bankuser/' + phone).once('value')
         .then((snapshot) => {
           const data = snapshot.val();
             if (snapshot.exists()) {
               alert('exit')
+              document.querySelector('.beforelogin').style.display = "none";
+              document.querySelector('#cardA .afterlogin').style.display = "block";
+              document.getElementById('aDisplayName').innerText = `${data.Fullname}`;
+              document.getElementById('aDisplayNumber').innerText = `${data.number}`;
+              document.getElementById('aBalance').innerText=`${data.coins}`
+             }
+            })
+            .catch((error) => {
+              alert('Error: ' + error.message)
+            });
+}
+window.bankpersonAverify = function(){
+  alert("A login data clicked ✅");
+  const number = document.getElementById('aEnterBNumber').value.trim();
+  const link =document.getElementById('aEnterBUPID').value.trim()
+  const sendAmount =document.getElementById('sendAmount').value.trim()
+  database.ref('users/' + number).once('value')
+        .then((snapshot) => {
+          const data = snapshot.val();
+            if (snapshot.exists()) {
+                if(number==data.number){
+                  if(link==data.unicid[data.unicid.length-1]){
+                    database.ref('bankuser/' + number).once('value')
+                      .then((snapshot) => {
+                       const data = snapshot.val();
+                       if (snapshot.exists()) {
+                        var bankcoins=data.coins
+                        document.getElementById('bankcoins').innerText=bankcoins
+                        }
+                      })
+                      .catch((error) => {
+                        alert('Error: ' + error.message)
+                      });
+                    let bankcoins=document.getElementById('bankcoins').innerText
+                      if(sendAmount<=bankcoins){
+                        alert('successed')
+                      }
+                      else{
+                        alert('wrong')
+                      }
+                  }
+                  else{
+                    alert('LINK ID WAS NOT MATCHED')
+                  }
+                }else{
+                  alert('enter currect nuber')
+                }
             }
             })
             .catch((error) => {
