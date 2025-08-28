@@ -846,7 +846,7 @@ window.addingcoins = function (phone,name) {
 
 console.log('sai krishna')
 //****************************** BANKPERSONB LOGIN SESSION ****************************/
-window.bankpersonBloginsai = function () {
+window.bankpersonbloginsai = function () {
     alert("B login clicked ✅");
 
 
@@ -892,7 +892,7 @@ window.bankpersonBloginsai = function () {
 }
 //****************************** BANKPERSON A LOGIN SESSION ****************************/
 
-window.bankpersonAloginsai = function () {
+window.bankpersonaloginsai = function () {
   alert('ok')
   const name = document.getElementById('aName').value;
     const phone = document.getElementById('aNumber').value;
@@ -917,6 +917,7 @@ window.bankpersonAverify = function(){
   const number = document.getElementById('aEnterBNumber').value.trim();
   const link =document.getElementById('aEnterBUPID').value.trim()
   const sendAmount =document.getElementById('sendAmount').value.trim()
+  sendAmount=parseInt(sendAmount)
   database.ref('users/' + number).once('value')
         .then((snapshot) => {
           const data = snapshot.val();
@@ -935,6 +936,7 @@ window.bankpersonAverify = function(){
                         alert('Error: ' + error.message)
                       });
                     let bankcoins=document.getElementById('bankcoins').innerText
+                    bankcoins=parseInt(bankcoins)
                       if(sendAmount<=bankcoins){
                         alert('successed')
                       }
