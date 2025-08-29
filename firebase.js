@@ -916,7 +916,7 @@ window.bankpersonAverify = function(){
   alert("A login data clicked ✅");
   const number = document.getElementById('aEnterBNumber').value.trim();
   const link =document.getElementById('aEnterBUPID').value.trim()
-  const sendAmount =document.getElementById('sendAmount').value.trim()
+  let sendAmount =document.getElementById('sendAmount').value.trim()
   sendAmount=parseInt(sendAmount)
   database.ref('users/' + number).once('value')
         .then((snapshot) => {
@@ -924,25 +924,41 @@ window.bankpersonAverify = function(){
             if (snapshot.exists()) {
                 if(number==data.number){
                   if(link==data.unicid[data.unicid.length-1]){
-                    database.ref('bankuser/' + number).once('value')
+                    let phone=number
+                    database.ref('bankuser/' + phone).once('value')
                       .then((snapshot) => {
-                       const data = snapshot.val();
+                       const data1 = snapshot.val();
                        if (snapshot.exists()) {
-                        var bankcoins=data.coins
-                        document.getElementById('bankcoins').innerText=bankcoins
+                        alert('exit bank')
+                         alert('coins'+data1.coins)
+                        document.getElementById('bankcoins').innerText=`${data1.coins}`
+                        let bankcoins=document.getElementById('bankcoins').innerText
+                    
+                    alert('bankcoins'+bankcoins+typeof(bankcoins))
+                    alert('sendAmount'+sendAmount+typeof(sendAmount))
+                      if(sendAmount<=bankcoins){
+                        alert('successed')
+                        window.sendCoins()
+                        database.ref('users/' + number).update({
+                            coins:parseInt(sendAmount),
+                          })
+                         .then(() => {
+                          alert(`User "${data.username}" LOGIN successfully Transfor coins........... "`)
+                           })
+                          .catch((error) => {
+                           alert(error)
+                          });
+
+                      }
+                      else{
+                        alert('wrong')
+                      }
                         }
                       })
                       .catch((error) => {
                         alert('Error: ' + error.message)
                       });
-                    let bankcoins=document.getElementById('bankcoins').innerText
-                    bankcoins=parseInt(bankcoins)
-                      if(sendAmount<=bankcoins){
-                        alert('successed')
-                      }
-                      else{
-                        alert('wrong')
-                      }
+                     
                   }
                   else{
                     alert('LINK ID WAS NOT MATCHED')

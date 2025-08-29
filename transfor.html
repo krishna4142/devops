@@ -170,7 +170,7 @@
 
     <div class="openbblock" style="display: none;"> 
       <h4>Welcome, <span id="bDisplayName"></span></h4>
-      <p>Number: <span id="bDisplayNumber" class="copy-text" onclick="copyText('bDisplayNumber')"></span></p>
+      <p>Number: <span id="bDisplayNumber" class="copy-text" onclick="copyText()"></span></p>
       <div class="balance-box">
         UPID: <span id="upidText" class="copy-text" onclick="copyText('upidText')"></span>
       </div>
@@ -234,8 +234,8 @@
     }
   }
 
-  function copyText(elementId) {
-    let text = document.getElementById(elementId).innerText;
+  function copyText() {
+    let text = document.getElementById(bDisplayNumber).innerText;
     navigator.clipboard.writeText(text).then(() => {
       alert("Copied: " + text);
     });
